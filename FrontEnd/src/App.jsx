@@ -8,7 +8,7 @@ function App() {
   return (
     <>
       <Routes>
-        <Route path="/add_Bills" element={<UploadReceipt />} />
+        {/* <Route path="/add_Bills" element={<UploadReceipt />} /> */}
         <Route path="/view_Bills" element={<UploadReceipt />} />
         <Route path="/upload_Recipt" element={<UploadReceipt />} />
         <Route path="/add_Bills" element={<AddBill />} />

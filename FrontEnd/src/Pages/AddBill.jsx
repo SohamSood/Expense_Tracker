@@ -13,7 +13,7 @@ export default function AddBill() {
   return (
     <div>
       <h1>Add Bill Page</h1>
-      {/* <BillForm onSubmit={handleAddBill} /> */}
+      {<BillForm onSubmit={handleAddBill} />}
     </div>
   );
 }
