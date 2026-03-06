@@ -9,6 +9,8 @@ const stats = [
   { title: "Months Counted"},
 ];
 
+
+
 const chartData = [
   { month: "Jan", profit: 28, loss: 19 },
   { month: "Feb", profit: 34, loss: 16 },
@@ -113,12 +115,29 @@ function AnalyticsChart() {
   );
 }
 
+
+
 export default function Dashboard() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [totalSpending, setTotalSpending] = useState("0");
   const [avgSpending, setAvgSpending] = useState("0");
   const [monthCounted, setMonthCounted] = useState("0");
   const featuredStats = useMemo(() => stats.slice(1), []);
+  const [recentBills, setRecentBills] = useState([]);
+
+  useEffect(() => {
+  async function fetchRecentBills() {
+    try {
+      const res = await fetch("http://localhost:5001/api/bills/recent");
+      const data = await res.json();
+      setRecentBills(data);
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  fetchRecentBills();
+}, []);
 
   useEffect(() => {
     async function fetchAverage() {
@@ -339,25 +358,21 @@ export default function Dashboard() {
             <div className="db-table">
               <div className="db-table__head">
                 <span>Order ID</span>
-                <span>Activity</span>
+                <span>Type</span>
                 <span>Price</span>
                 <span>Status</span>
                 <span>Date</span>
               </div>
 
-              {activities.map((item) => (
-                <div key={item.id} className="db-table__row">
-                  <span>{item.id}</span>
-                  <span>{item.activity}</span>
-                  <span>{item.price}</span>
-                  <span
-                    className={`db-status ${item.status.toLowerCase().replace(" ", "-")}`}
-                  >
-                    {item.status}
-                  </span>
-                  <span>{item.date}</span>
-                </div>
-              ))}
+            {recentBills.map((bill) => (
+              <div key={bill.id} className="db-table__row">
+                <span>{bill.id}</span>
+                <span>{bill.name}</span>
+                <span>₹{bill.amount}</span>
+                <span className="db-status completed">Recorded</span>
+                <span>{new Date(bill.date).toLocaleDateString()}</span>
+              </div>
+            ))}
             </div>
           </section>
         </section>
