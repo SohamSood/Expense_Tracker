@@ -2,7 +2,7 @@ import { useMemo, useState, useEffect } from "react";
 import "../CSS/dashboard.css";
 
 const stats = [
-  { title: "Total Balance", tone: "wide"},
+  { title: "Total Balance", value: "PARENTS MONEY :-)", tone: "wide"},
   { title: "Average Spending", tone: "accent" },
   { title: "Total Spending"},
   { title: "Total Income"},
