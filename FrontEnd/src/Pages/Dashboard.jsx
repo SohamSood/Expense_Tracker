@@ -1,15 +1,14 @@
 import { useMemo, useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import "../CSS/dashboard.css";
 
 const stats = [
-  { title: "Total Balance", value: "PARENTS MONEY :-)", tone: "wide"},
+  { title: "Total Balance", value: "PARENTS MONEY :-)", tone: "wide" },
   { title: "Average Spending", tone: "accent" },
-  { title: "Total Spending"},
-  { title: "Total Income"},
-  { title: "Months Counted"},
+  { title: "Total Spending" },
+  { title: "Total Income" },
+  { title: "Months Counted" },
 ];
-
-
 
 const chartData = [
   { month: "Jan", profit: 28, loss: 19 },
@@ -22,41 +21,10 @@ const chartData = [
   { month: "Aug", profit: 27, loss: 14 },
 ];
 
-const activities = [
-  {
-    id: "INV_000076",
-    activity: "Mobile App Purchase",
-    price: "₹25,500",
-    status: "Completed",
-    date: "17 Apr, 2026 03:45 PM",
-  },
-  {
-    id: "INV_000075",
-    activity: "Hotel Booking",
-    price: "₹32,750",
-    status: "Pending",
-    date: "15 Apr, 2026 11:30 AM",
-  },
-  {
-    id: "INV_000074",
-    activity: "Flight Ticket Booking",
-    price: "₹40,200",
-    status: "Completed",
-    date: "15 Apr, 2026 12:00 PM",
-  },
-  {
-    id: "INV_000073",
-    activity: "Grocery Purchase",
-    price: "₹50,200",
-    status: "In Progress",
-    date: "14 Apr, 2026 09:15 PM",
-  },
-];
-
 const sideItems = [
-  { label: "Dashboard", icon: "◫", active: true },
-  { label: "Transactions", icon: "↔" },
-  { label: "Reports", icon: "▤" },
+  { label: "Dashboard", icon: "◫", path: "/dashboard", active: true },
+  { label: "Add Bill", icon: "↔", path: "/add-bill" },
+  { label: "View Bills", icon: "▤", path: "/view_Bills" },
   { label: "Cards", icon: "▣" },
   { label: "Settings", icon: "⚙" },
 ];
@@ -71,8 +39,6 @@ function Brand() {
     </div>
   );
 }
-
-
 
 function AnalyticsChart() {
   return (
@@ -115,9 +81,8 @@ function AnalyticsChart() {
   );
 }
 
-
-
 export default function Dashboard() {
+  const navigate = useNavigate();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [totalSpending, setTotalSpending] = useState("0");
   const [avgSpending, setAvgSpending] = useState("0");
@@ -126,18 +91,18 @@ export default function Dashboard() {
   const [recentBills, setRecentBills] = useState([]);
 
   useEffect(() => {
-  async function fetchRecentBills() {
-    try {
-      const res = await fetch("http://localhost:5001/api/bills/recent");
-      const data = await res.json();
-      setRecentBills(data);
-    } catch (err) {
-      console.error(err);
+    async function fetchRecentBills() {
+      try {
+        const res = await fetch("http://localhost:5001/api/bills/recent");
+        const data = await res.json();
+        setRecentBills(data);
+      } catch (err) {
+        console.error(err);
+      }
     }
-  }
 
-  fetchRecentBills();
-}, []);
+    fetchRecentBills();
+  }, []);
 
   useEffect(() => {
     async function fetchAverage() {
@@ -179,6 +144,7 @@ export default function Dashboard() {
                 className={`db-sideitem ${item.active ? "is-active" : ""}`}
                 aria-label={item.label}
                 title={item.label}
+                onClick={item.path ? () => navigate(item.path) : undefined}
               >
                 <span>{item.icon}</span>
               </button>
@@ -317,29 +283,27 @@ export default function Dashboard() {
 
             <div className="db-column db-column--secondary">
               <div className="db-stat-grid">
-                  {featuredStats.map((item) => {
+                {featuredStats.map((item) => {
+                  let value = item.value;
 
-                    let value = item.value;
+                  if (item.title === "Total Spending") {
+                    value = `₹${totalSpending}`;
+                  } else if (item.title === "Average Spending") {
+                    value = `₹${avgSpending}`;
+                  } else if (item.title === "Months Counted") {
+                    value = `${monthCounted}`;
+                  }
 
-                    if (item.title === "Total Spending") {
-                      value = `₹${totalSpending}`;
-                    } else if (item.title === "Average Spending") {
-                      value = `₹${avgSpending}`;
-                    } else if (item.title === "Months Counted") {
-                      value = `${monthCounted}`;
-                    }
-
-                    return (
-                      <article
-                        key={item.title}
-                        className={`db-card db-stat-card ${item.tone === "accent" ? "is-accent" : ""}`}
-                      >
-                        <p>{item.title}</p>
-                        <h3>{value}</h3>
-                      </article>
-                    );
-
-                  })}
+                  return (
+                    <article
+                      key={item.title}
+                      className={`db-card db-stat-card ${item.tone === "accent" ? "is-accent" : ""}`}
+                    >
+                      <p>{item.title}</p>
+                      <h3>{value}</h3>
+                    </article>
+                  );
+                })}
               </div>
 
               <AnalyticsChart />
@@ -364,15 +328,15 @@ export default function Dashboard() {
                 <span>Date</span>
               </div>
 
-            {recentBills.map((bill) => (
-              <div key={bill.id} className="db-table__row">
-                <span>{bill.id}</span>
-                <span>{bill.name}</span>
-                <span>₹{bill.amount}</span>
-                <span className="db-status completed">Recorded</span>
-                <span>{new Date(bill.date).toLocaleDateString()}</span>
-              </div>
-            ))}
+              {recentBills.map((bill) => (
+                <div key={bill.id} className="db-table__row">
+                  <span>{bill.id}</span>
+                  <span>{bill.name}</span>
+                  <span>₹{bill.amount}</span>
+                  <span className="db-status completed">Recorded</span>
+                  <span>{new Date(bill.date).toLocaleDateString()}</span>
+                </div>
+              ))}
             </div>
           </section>
         </section>

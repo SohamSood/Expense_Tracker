@@ -1,0 +1,123 @@
+.add-bill-page {
+  display: grid;
+  gap: 20px;
+}
+
+.add-bill-page__header {
+  display: grid;
+  gap: 8px;
+  padding: 4px 4px 0;
+}
+
+.add-bill-page__header h1 {
+  margin: 0;
+  font-size: clamp(2rem, 3vw, 2.5rem);
+  color: #172554;
+}
+
+.add-bill-page__header p:last-child {
+  margin: 0;
+  max-width: 620px;
+  color: #5b6685;
+}
+
+.add-bill-card {
+  padding: 28px;
+  border-radius: 26px;
+}
+
+.add-bill-form {
+  display: grid;
+  gap: 18px;
+}
+
+.add-bill-form__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.add-bill-form__title {
+  margin: 0 0 6px;
+  font-size: 1.5rem;
+  color: #172554;
+}
+
+.add-bill-form__field {
+  display: grid;
+  gap: 8px;
+}
+
+.add-bill-form__field label {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #31405f;
+}
+
+.add-bill-form__field input,
+.add-bill-form__field select {
+  width: 100%;
+  min-height: 50px;
+  padding: 0 16px;
+  border: 1px solid rgba(85, 113, 255, 0.18);
+  border-radius: 16px;
+  background: #f8faff;
+  color: #1e2a47;
+  font-size: 1rem;
+  outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease,
+    background-color 160ms ease;
+}
+
+.add-bill-form__field input:focus,
+.add-bill-form__field select:focus {
+  border-color: #4c6fff;
+  box-shadow: 0 0 0 4px rgba(76, 111, 255, 0.12);
+  background: #ffffff;
+}
+
+.add-bill-form__submit {
+  justify-self: start;
+  min-width: 140px;
+  min-height: 48px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+  color: #ffffff;
+  font-size: 0.98rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 14px 26px rgba(56, 84, 215, 0.2);
+}
+
+.add-bill-form__submit:disabled {
+  cursor: wait;
+  opacity: 0.8;
+}
+
+.add-bill-form__submit:hover {
+  filter: brightness(1.04);
+}
+
+.add-bill-card p {
+  margin: 0;
+  color: #495777;
+}
+
+@media (max-width: 760px) {
+  .add-bill-card {
+    padding: 22px;
+  }
+
+  .add-bill-form__grid {
+    grid-template-columns: 1fr;
+  }
+
+  .add-bill-form__submit {
+    width: 100%;
+    justify-self: stretch;
+  }
+}

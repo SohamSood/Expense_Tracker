@@ -86,11 +86,16 @@
 .db-sideitem {
   width: 52px;
   height: 52px;
+  display: grid;
+  place-items: center;
   border: 0;
+  padding: 0;
   border-radius: 18px;
   background: #ffffff;
   color: #55617b;
   font-size: 1.15rem;
+  line-height: 1;
+  text-decoration: none;
   cursor: pointer;
 }
 
