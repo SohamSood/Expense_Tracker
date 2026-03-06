@@ -87,6 +87,7 @@ export default function Dashboard() {
   const [totalSpending, setTotalSpending] = useState("0");
   const [avgSpending, setAvgSpending] = useState("0");
   const [monthCounted, setMonthCounted] = useState("0");
+  const [user, setUser] = useState("Name here");
   const featuredStats = useMemo(() => stats.slice(1), []);
   const [recentBills, setRecentBills] = useState([]);
 
@@ -103,6 +104,8 @@ export default function Dashboard() {
 
     fetchRecentBills();
   }, []);
+
+
 
   useEffect(() => {
     async function fetchAverage() {
@@ -130,6 +133,22 @@ export default function Dashboard() {
 
     fetchAverage();
   }, []);
+
+useEffect(() => {
+  async function fetchUser() {
+    try {
+      const res = await fetch("http://localhost:5001/api/user");
+      const data = await res.json();
+
+      setUser(data.name);
+
+    } catch (err) {
+      console.error(err);
+    }
+  }
+
+  fetchUser();
+}, []);
 
   return (
     <main className="db-page">
@@ -183,8 +202,8 @@ export default function Dashboard() {
                 >
                   <span className="db-profile__avatar">SS</span>
                   <span className="db-profile__meta">
-                    <strong>Sunaina Sharma</strong>
-                    <small>sunaina.sharma@expense.app</small>
+                    <strong>{user}</strong>
+                    <small>{user.split(" ")[0]}@expense.app</small>
                   </span>
                   <span className="db-profile__chevron">⌄</span>
                 </button>
@@ -201,7 +220,7 @@ export default function Dashboard() {
           <div className="db-welcome">
             <div>
               <p className="db-welcome__eyebrow">Expense overview</p>
-              <h1>Good morning, Sunaina</h1>
+              <h1>Good morning, {user}</h1>
               <p>
                 Stay on top of your spending, savings, and account activity.
               </p>

@@ -10,6 +10,9 @@ const billRoutes = require("./Routes/bill_Routes");
 const averageRoutes = require("./Routes/average");
 const decreaseRoutes = require("./Routes/decrease");
 const increaseRoutes = require("./Routes/increase");
+const userRoutes = require("./Routes/user");
+
+
 
 app.use(cors());
 app.use(express.json());
@@ -21,6 +24,7 @@ app.use("/api/bills", billRoutes);
 app.use("/api/average",averageRoutes);
 app.use("/api/decrease",decreaseRoutes);
 app.use("/api/increase",increaseRoutes);
+app.use("/api/user", userRoutes);
 
 //direct endpoints
 app.get("/", (req, res) => {
