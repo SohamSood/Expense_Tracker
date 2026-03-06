@@ -1,0 +1,308 @@
+.et-login-page {
+  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr;
+  align-items: center;
+  overflow: hidden;
+  padding: 8px;
+  background: linear-gradient(135deg, #f1dfe3, #d8e1ff 55%, #f1dfe5);
+}
+
+.et-login-shell {
+  width: 100%;
+  max-width: 1420px;
+  margin: 0 auto;
+  height: 100%;
+  min-height: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+  padding: 6px;
+  align-items: stretch;
+  overflow: hidden;
+  border: 2px solid rgba(168, 201, 255, 0.75);
+  border-radius: 34px;
+  background: rgba(255, 255, 255, 0.76);
+  box-shadow: 0 24px 70px rgba(71, 91, 162, 0.15);
+  backdrop-filter: blur(12px);
+}
+
+.et-login-left {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%;
+}
+
+.et-login-right {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.et-login-form {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 0;
+  height: 100%;
+  padding: 14px 18px;
+}
+
+.et-login-card {
+  width: min(100%, 470px);
+}
+
+.et-login-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.et-login-brand__icon {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #4c74ff, #2250e7);
+  color: #ffffff;
+  font-size: 0.95rem;
+  font-weight: 800;
+  box-shadow: 0 14px 30px rgba(62, 93, 242, 0.24);
+}
+
+.et-login-brand__text {
+  color: #2f3342;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.et-login-header {
+  text-align: center;
+}
+
+.et-login-header h1 {
+  color: #161921;
+  font-size: clamp(2rem, 4vw, 3.1rem);
+  line-height: 1.05;
+  letter-spacing: -0.05em;
+}
+
+.et-login-header p {
+  margin: 8px auto 0;
+  max-width: 440px;
+  color: #5f6678;
+  font-size: 0.94rem;
+  line-height: 1.45;
+}
+
+.et-login-fields {
+  margin-top: 18px;
+}
+
+.et-field {
+  display: block;
+  margin-bottom: 12px;
+}
+
+.et-field > span {
+  display: block;
+  margin-bottom: 8px;
+  color: #444d61;
+  font-weight: 600;
+}
+
+.et-field__control {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 0 16px;
+  border: 1px solid #dbe1ea;
+  border-radius: 16px;
+  background: #ffffff;
+}
+
+.et-field__icon {
+  color: #707b8e;
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.et-field input {
+  flex: 1;
+  min-width: 0;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #1e2230;
+  font-size: 1rem;
+}
+
+.et-field input::placeholder {
+  color: #7c8798;
+}
+
+.et-password-toggle {
+  border: 0;
+  background: transparent;
+  color: #4f5f89;
+  cursor: pointer;
+  font-size: 0.92rem;
+  font-weight: 600;
+}
+
+.et-login-options {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  margin: 4px 2px 12px;
+}
+
+.et-checkbox {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  color: #4f5769;
+}
+
+.et-checkbox input {
+  width: 16px;
+  height: 16px;
+}
+
+.et-login-options a {
+  color: #1d56de;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.et-login-submit {
+  width: 100%;
+  min-height: 58px;
+  border: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, #1f59e0, #164fd7);
+  color: #ffffff;
+  font-size: 1.05rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 16px 30px rgba(28, 83, 221, 0.24);
+}
+
+.et-social-login {
+  margin-top: 12px;
+}
+
+.et-social-login__divider {
+  position: relative;
+  text-align: center;
+  color: #667084;
+}
+
+.et-social-login__divider::before,
+.et-social-login__divider::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 78px);
+  height: 1px;
+  background: #dde3ed;
+}
+
+.et-social-login__divider::before {
+  left: 0;
+}
+
+.et-social-login__divider::after {
+  right: 0;
+}
+
+.et-social-login__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.et-social-login__button {
+  min-height: 52px;
+  border: 1px solid #dbe1ea;
+  border-radius: 14px;
+  background: #ffffff;
+  cursor: pointer;
+  font-size: 1.7rem;
+}
+
+.et-social-login__button.google span {
+  color: #ea4335;
+}
+
+.et-social-login__button.apple span {
+  color: #111111;
+}
+
+.et-social-login__button.microsoft span {
+  color: #0f6cbd;
+}
+
+@media (max-width: 1024px) {
+  .et-login-page {
+    height: auto;
+    padding: 16px;
+    overflow: visible;
+  }
+
+  .et-login-shell {
+    height: auto;
+    min-height: auto;
+    grid-template-columns: 1fr;
+  }
+
+  .et-login-left,
+  .et-login-right {
+    height: auto;
+  }
+
+  .et-login-form {
+    min-height: auto;
+    padding: 34px 18px 10px;
+  }
+
+  .et-login-card {
+    width: min(100%, 620px);
+  }
+}
+
+@media (max-width: 640px) {
+  .et-login-page {
+    height: auto;
+    padding: 12px;
+  }
+
+  .et-login-shell {
+    height: auto;
+    min-height: auto;
+    padding: 8px;
+    border-radius: 22px;
+  }
+
+  .et-login-brand {
+    margin-bottom: 24px;
+  }
+
+  .et-login-options {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .et-social-login__grid {
+    grid-template-columns: 1fr;
+  }
+}

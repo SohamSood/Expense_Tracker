@@ -1,0 +1,61 @@
+.lp-page {
+  position: relative;
+  overflow: hidden;
+  min-height: 100vh;
+  width: 100%;
+  background: linear-gradient(135deg, #d8d9e2 0%, #fbfbfe 52%, #dbdde6 100%);
+}
+
+.lp-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(10px);
+  pointer-events: none;
+}
+
+.lp-orb--left {
+  top: -140px;
+  left: -120px;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(125, 138, 226, 0.34), transparent 70%);
+}
+
+.lp-orb--right {
+  right: -100px;
+  bottom: 140px;
+  width: 360px;
+  height: 360px;
+  background: radial-gradient(circle, rgba(94, 109, 248, 0.18), transparent 70%);
+}
+
+.lp-surface {
+  width: 100%;
+  padding: 0;
+  background:
+    radial-gradient(circle at left 70%, rgba(230, 232, 244, 0.9) 0 28%, transparent 29%),
+    linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(248, 248, 251, 0.98));
+}
+
+.lp-section {
+  width: 100%;
+}
+
+.lp-content {
+  width: 100%;
+  max-width: 1380px;
+  margin: 0 auto;
+  padding: 0 60px;
+}
+
+@media (max-width: 900px) {
+  .lp-content {
+    padding: 0 28px;
+  }
+}
+
+@media (max-width: 640px) {
+  .lp-content {
+    padding: 0 16px;
+  }
+}
