@@ -8,7 +8,6 @@ const UPLOADS_DIR = path.join(__dirname, "../Uploads");
 
 
 
-// GET /api/receipts — list all valid files
 router.get("/", async (req, res) => {
   try {
     const files = await fs.readdir(UPLOADS_DIR);
@@ -25,7 +24,6 @@ router.get("/", async (req, res) => {
 
 
 
-// GET /api/receipts/text/:filename — parse a .txt bill file
 router.get("/text/:filename", async (req, res) => {
   try {
     const filePath = path.join(UPLOADS_DIR, req.params.filename);
@@ -36,7 +34,7 @@ router.get("/text/:filename", async (req, res) => {
 
     content.split("\n").forEach((line) => {
       const colonIndex = line.indexOf(":");        
-      if (colonIndex === -1) return;                // skip blank lines or lines with no colon
+      if (colonIndex === -1) return;             
 
       const key = line.slice(0, colonIndex).trim();
       const value = line.slice(colonIndex + 1).trim();
