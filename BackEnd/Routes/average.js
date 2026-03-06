@@ -73,13 +73,13 @@ router.get("/", (req,res)=>{
         let diff = 0;
 
         if(i>0){
-            prev = result[i-1].average;
+            prev = result[i-1].sum;
             diff = avgsum - prev;
         }
 
         result.push({
             month: month,
-            average: avgsum,
+            sum: avgsum,
             previous: prev,
             difference: diff
         });
