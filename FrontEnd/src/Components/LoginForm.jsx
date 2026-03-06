@@ -2,17 +2,12 @@ import { useState } from "react";
 import SocialLogin from "./SocialLogin";
 import "../CSS/login.css";
 
-export default function LoginForm() {
+export default function LoginForm({ onLogin }) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <section className="et-login-form">
       <div className="et-login-card">
-        <div className="et-login-brand" aria-label="Expense Tracker logo">
-          <span className="et-login-brand__icon">ET</span>
-          <span className="et-login-brand__text">Expense Tracker</span>
-        </div>
-
         <div className="et-login-header">
           <h1>Login to your Expense Tracker</h1>
           <p>
@@ -21,7 +16,13 @@ export default function LoginForm() {
           </p>
         </div>
 
-        <form className="et-login-fields">
+        <form
+          className="et-login-fields"
+          onSubmit={(event) => {
+            event.preventDefault();
+            onLogin?.();
+          }}
+        >
           <label className="et-field">
             <span>Email</span>
             <div className="et-field__control">

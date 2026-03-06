@@ -14,7 +14,7 @@ export default function LoginIllustration() {
     <section className="et-illustration">
       <div className="et-illustration__panel">
         <h2>
-          Track Your Expenses <span>Anywhere</span>
+          Track Your Expenses <br /> <span>Anywhere</span>
         </h2>
 
         <div className="et-orbit">
