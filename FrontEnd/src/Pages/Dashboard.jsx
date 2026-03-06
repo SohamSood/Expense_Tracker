@@ -1,12 +1,12 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import "../CSS/dashboard.css";
 
 const stats = [
-  { title: "Total Balance", value: "₹689,372.00", change: "+5%", tone: "wide" },
-  { title: "Total Earnings", value: "₹950", change: "+7%", tone: "accent" },
-  { title: "Total Spending", value: "₹700", change: "-5%", tone: "light" },
-  { title: "Total Income", value: "₹1050", change: "+8%", tone: "light" },
-  { title: "Total Revenue", value: "₹850", change: "+4%", tone: "light" },
+  { title: "Total Balance", tone: "wide"},
+  { title: "Average Spending", tone: "accent" },
+  { title: "Total Spending"},
+  { title: "Total Income"},
+  { title: "Months Counted"},
 ];
 
 const chartData = [
@@ -70,6 +70,8 @@ function Brand() {
   );
 }
 
+
+
 function AnalyticsChart() {
   return (
     <div className="db-chart">
@@ -113,7 +115,37 @@ function AnalyticsChart() {
 
 export default function Dashboard() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [totalSpending, setTotalSpending] = useState("0");
+  const [avgSpending, setAvgSpending] = useState("0");
+  const [monthCounted, setMonthCounted] = useState("0");
   const featuredStats = useMemo(() => stats.slice(1), []);
+
+  useEffect(() => {
+    async function fetchAverage() {
+      try {
+        const res = await fetch("http://localhost:5001/api/average");
+        const data = await res.json();
+
+        let totalSum = 0;
+        let totalCount = 0;
+
+        Object.values(data).forEach((month) => {
+          totalSum += month.sum;
+          totalCount += month.count;
+        });
+
+        const avg = totalCount ? totalSum / totalCount : 0;
+
+        setTotalSpending(totalSum.toFixed(2));
+        setAvgSpending(avg.toFixed(2));
+        setMonthCounted(totalCount);
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchAverage();
+  }, []);
 
   return (
     <main className="db-page">
@@ -266,16 +298,29 @@ export default function Dashboard() {
 
             <div className="db-column db-column--secondary">
               <div className="db-stat-grid">
-                {featuredStats.map((item) => (
-                  <article
-                    key={item.title}
-                    className={`db-card db-stat-card ${item.tone === "accent" ? "is-accent" : ""}`}
-                  >
-                    <p>{item.title}</p>
-                    <h3>{item.value}</h3>
-                    <span>{item.change} This month</span>
-                  </article>
-                ))}
+                  {featuredStats.map((item) => {
+
+                    let value = item.value;
+
+                    if (item.title === "Total Spending") {
+                      value = `₹${totalSpending}`;
+                    } else if (item.title === "Average Spending") {
+                      value = `₹${avgSpending}`;
+                    } else if (item.title === "Months Counted") {
+                      value = `${monthCounted}`;
+                    }
+
+                    return (
+                      <article
+                        key={item.title}
+                        className={`db-card db-stat-card ${item.tone === "accent" ? "is-accent" : ""}`}
+                      >
+                        <p>{item.title}</p>
+                        <h3>{value}</h3>
+                      </article>
+                    );
+
+                  })}
               </div>
 
               <AnalyticsChart />
