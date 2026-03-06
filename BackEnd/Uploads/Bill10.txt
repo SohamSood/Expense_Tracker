@@ -1,0 +1,10 @@
+
+Name: Soham Sood
+Phone Number: 9876543210
+Bill Type: Utility
+Date: 2026-10-10
+Time: 19:10
+Item 1: Electricity Bill
+Price 1: 1800
+Bill Amount: 18
+Status: paid

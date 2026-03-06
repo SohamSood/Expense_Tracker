@@ -1,0 +1,682 @@
+.db-page {
+  min-height: 100vh;
+  padding: 20px;
+  background:
+    radial-gradient(circle at top left, rgba(77, 117, 255, 0.14), transparent 24%),
+    linear-gradient(180deg, #edf2ff, #f7f9ff 42%, #eef3ff);
+}
+
+.db-shell {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: 88px 1fr;
+  gap: 18px;
+}
+
+.db-sidebar,
+.db-card,
+.db-topbar {
+  border: 1px solid rgba(68, 88, 173, 0.08);
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 42px rgba(36, 56, 131, 0.08);
+}
+
+.db-sidebar {
+  min-height: calc(100vh - 40px);
+  padding: 18px 12px;
+  border-radius: 28px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 18px;
+}
+
+.db-brand {
+  display: grid;
+  justify-items: center;
+  gap: 10px;
+}
+
+.db-brand__mark {
+  position: relative;
+  width: 48px;
+  height: 48px;
+}
+
+.db-brand__mark::before,
+.db-brand__mark::after,
+.db-brand__mark span {
+  content: "";
+  position: absolute;
+  border-radius: 999px;
+  border: 4px solid #2250e7;
+}
+
+.db-brand__mark::before {
+  inset: 6px 12px 6px 6px;
+  border-right-width: 0;
+}
+
+.db-brand__mark::after {
+  inset: 12px 6px 12px 18px;
+  border-left-width: 0;
+}
+
+.db-brand__mark span {
+  inset: 12px 18px 12px 12px;
+  border-right-width: 0;
+}
+
+.db-brand__text {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  color: #4c5a77;
+  font-size: 0.76rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.db-sidebar__nav {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+}
+
+.db-sideitem {
+  width: 52px;
+  height: 52px;
+  display: grid;
+  place-items: center;
+  border: 0;
+  padding: 0;
+  border-radius: 18px;
+  background: #ffffff;
+  color: #55617b;
+  font-size: 1.15rem;
+  line-height: 1;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.db-sideitem.is-active,
+.db-sideitem:hover {
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+  color: #ffffff;
+}
+
+.db-sideitem--bottom {
+  margin-top: auto;
+}
+
+.db-main {
+  display: grid;
+  gap: 18px;
+}
+
+.db-topbar {
+  padding: 14px 18px;
+  border-radius: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+}
+
+.db-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.db-tabs button,
+.db-topbar__icons button,
+.db-add-btn,
+.db-table-tools button {
+  border: 0;
+  cursor: pointer;
+}
+
+.db-tabs button {
+  padding: 12px 18px;
+  border-radius: 999px;
+  background: #f4f7ff;
+  color: #445065;
+  font-weight: 600;
+}
+
+.db-tabs button.is-active {
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+  color: #ffffff;
+}
+
+.db-topbar__right {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.db-topbar__icons {
+  display: flex;
+  gap: 10px;
+}
+
+.db-topbar__icons button {
+  width: 42px;
+  height: 42px;
+  border-radius: 14px;
+  background: #f4f7ff;
+  color: #445065;
+}
+
+.db-profile {
+  position: relative;
+}
+
+.db-profile__button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 12px;
+  border: 0;
+  border-radius: 18px;
+  background: #f7f9ff;
+  cursor: pointer;
+}
+
+.db-profile__avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+  color: #ffffff;
+  font-weight: 800;
+}
+
+.db-profile__meta {
+  display: grid;
+  text-align: left;
+}
+
+.db-profile__meta strong {
+  color: #1e2433;
+  font-size: 0.95rem;
+}
+
+.db-profile__meta small {
+  color: #778299;
+}
+
+.db-profile__menu {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  min-width: 160px;
+  padding: 8px;
+  border-radius: 16px;
+  background: #ffffff;
+  box-shadow: 0 18px 36px rgba(31, 48, 110, 0.12);
+  display: none;
+}
+
+.db-profile.is-open .db-profile__menu {
+  display: grid;
+}
+
+.db-profile__menu button {
+  padding: 10px 12px;
+  border: 0;
+  border-radius: 12px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+
+.db-profile__menu button:hover {
+  background: #f2f6ff;
+}
+
+.db-welcome {
+  padding: 8px 10px;
+}
+
+.db-welcome__eyebrow {
+  color: #5f74bc;
+  font-size: 0.92rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.db-welcome h1 {
+  margin-top: 10px;
+  color: #161b28;
+  font-size: clamp(2rem, 4vw, 3.25rem);
+  line-height: 1.02;
+  letter-spacing: -0.05em;
+}
+
+.db-welcome p {
+  margin-top: 8px;
+  color: #697489;
+}
+
+.db-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1.08fr) minmax(320px, 0.92fr);
+  gap: 18px;
+}
+
+.db-column {
+  display: grid;
+  gap: 18px;
+}
+
+.db-card {
+  padding: 22px;
+  border-radius: 24px;
+}
+
+.db-card__row {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.db-balance-card h2 {
+  margin-top: 8px;
+  color: #131926;
+  font-size: clamp(2rem, 4vw, 2.9rem);
+}
+
+.db-chip {
+  padding: 8px 12px;
+  border-radius: 12px;
+  background: #edf2ff;
+  color: #3557e7;
+  font-weight: 700;
+}
+
+.db-growth {
+  display: inline-block;
+  margin-top: 10px;
+  color: #16a46a;
+  font-weight: 600;
+}
+
+.db-balance-actions {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-top: 20px;
+}
+
+.db-balance-actions button {
+  min-height: 48px;
+  border: 0;
+  border-radius: 16px;
+  background: #f3f6ff;
+  color: #33425e;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.db-balance-actions button.is-dark {
+  background: linear-gradient(135deg, #1f2d56, #10192d);
+  color: #ffffff;
+}
+
+.db-wallets {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+  margin-top: 18px;
+}
+
+.db-wallet {
+  padding: 16px;
+  border-radius: 18px;
+  background: #f8faff;
+}
+
+.db-wallet strong,
+.db-stat-card h3,
+.db-limit-card h3,
+.db-cards-card h3,
+.db-chart h3,
+.db-activity-card h3 {
+  color: #171d2a;
+}
+
+.db-wallet strong {
+  display: block;
+}
+
+.db-wallet span,
+.db-wallet small,
+.db-limit-card span,
+.db-chart p,
+.db-table__head,
+.db-table__row,
+.db-stat-card span {
+  color: #6f7a90;
+}
+
+.db-wallet small {
+  display: block;
+  margin-top: 8px;
+  color: #16a46a;
+}
+
+.db-limit-card h3 {
+  margin-bottom: 18px;
+}
+
+.db-progress {
+  height: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #e8edfb;
+}
+
+.db-progress span {
+  display: block;
+  width: 38%;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+}
+
+.db-progress__labels {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: 12px;
+  font-size: 0.92rem;
+}
+
+.db-add-btn {
+  padding: 10px 14px;
+  border-radius: 14px;
+  background: #f1f5ff;
+  color: #3654e6;
+  font-weight: 700;
+}
+
+.db-card-stack {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.db-bank-card {
+  min-height: 160px;
+  padding: 18px;
+  border-radius: 22px;
+  color: #ffffff;
+}
+
+.db-bank-card span,
+.db-bank-card small {
+  display: block;
+}
+
+.db-bank-card strong {
+  display: block;
+  margin: 30px 0 16px;
+  font-size: 1.7rem;
+}
+
+.db-bank-card--dark {
+  background: linear-gradient(135deg, #131b30, #212a48);
+}
+
+.db-bank-card--blue {
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+}
+
+.db-stat-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 18px;
+}
+
+.db-stat-card {
+  min-height: 146px;
+  background: #ffffff;
+}
+
+.db-stat-card.is-accent {
+  background: linear-gradient(135deg, #5571ff, #2f4de7);
+}
+
+.db-stat-card.is-accent p,
+.db-stat-card.is-accent h3,
+.db-stat-card.is-accent span {
+  color: #ffffff;
+}
+
+.db-stat-card h3 {
+  margin: 14px 0 10px;
+  font-size: 2.1rem;
+}
+
+.db-chart__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 14px;
+}
+
+.db-chart__legend {
+  display: flex;
+  gap: 14px;
+  font-size: 0.9rem;
+  color: #5f6f92;
+}
+
+.db-chart__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.db-chart__legend i,
+.db-status::before {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  display: inline-block;
+  content: "";
+}
+
+.db-chart__legend i.profit,
+.db-chart__bars .profit {
+  background: linear-gradient(180deg, #88a5ff, #3e63ff);
+}
+
+.db-chart__legend i.loss,
+.db-chart__bars .loss {
+  background: linear-gradient(180deg, #1e273b, #131926);
+}
+
+.db-chart__body {
+  display: grid;
+  grid-template-columns: repeat(8, 1fr);
+  gap: 10px;
+  align-items: end;
+  min-height: 260px;
+  margin-top: 28px;
+}
+
+.db-chart__group {
+  display: grid;
+  gap: 10px;
+  justify-items: center;
+}
+
+.db-chart__bars {
+  display: flex;
+  align-items: end;
+  gap: 6px;
+  height: 220px;
+}
+
+.db-chart__bars span {
+  width: 20px;
+  border-radius: 999px 999px 10px 10px;
+}
+
+.db-table-tools {
+  display: flex;
+  gap: 10px;
+}
+
+.db-table-tools input {
+  min-width: 180px;
+  padding: 12px 14px;
+  border: 1px solid #dbe2f4;
+  border-radius: 14px;
+  background: #fbfcff;
+}
+
+.db-table-tools button {
+  padding: 12px 16px;
+  border-radius: 14px;
+  background: #f3f6ff;
+  color: #3856e6;
+  font-weight: 700;
+}
+
+.db-table {
+  margin-top: 18px;
+  overflow: hidden;
+  border-radius: 18px;
+  border: 1px solid #e4e9f6;
+}
+
+.db-table__head,
+.db-table__row {
+  display: grid;
+  grid-template-columns: 1.1fr 1.5fr 0.8fr 0.95fr 1.4fr;
+  gap: 14px;
+  align-items: center;
+  padding: 16px 18px;
+}
+
+.db-table__head {
+  background: #f8faff;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.db-table__row {
+  border-top: 1px solid #edf1fb;
+  background: #ffffff;
+}
+
+.db-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.db-status.completed::before {
+  background: #22b573;
+}
+
+.db-status.pending::before {
+  background: #ef5350;
+}
+
+.db-status.in-progress::before {
+  background: #f2c94c;
+}
+
+@media (max-width: 1180px) {
+  .db-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 980px) {
+  .db-page {
+    padding: 14px;
+  }
+
+  .db-shell {
+    grid-template-columns: 1fr;
+  }
+
+  .db-sidebar {
+    min-height: auto;
+    grid-row: 2;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+
+  .db-brand {
+    display: inline-flex;
+    align-items: center;
+  }
+
+  .db-brand__text {
+    writing-mode: initial;
+    transform: none;
+  }
+
+  .db-sidebar__nav {
+    grid-auto-flow: column;
+    margin-top: 0;
+  }
+
+  .db-sideitem--bottom {
+    margin-top: 0;
+  }
+}
+
+@media (max-width: 760px) {
+  .db-topbar,
+  .db-card__row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .db-tabs,
+  .db-topbar__right,
+  .db-wallets,
+  .db-stat-grid,
+  .db-card-stack,
+  .db-balance-actions,
+  .db-table__head,
+  .db-table__row {
+    grid-template-columns: 1fr;
+  }
+
+  .db-tabs,
+  .db-topbar__right {
+    width: 100%;
+  }
+
+  .db-topbar__right {
+    align-items: stretch;
+  }
+
+  .db-table-tools {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .db-table-tools input {
+    min-width: 0;
+  }
+
+  .db-chart__body {
+    overflow-x: auto;
+  }
+}

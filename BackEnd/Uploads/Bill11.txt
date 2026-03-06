@@ -1,0 +1,13 @@
+Name: Soham Sood
+Phone Number: 9876543210
+Bill Type: Grocery
+Date: 2026-11-18
+Time: 18:00
+Item 1: Rice
+Price 1: 500
+Item 2: Wheat
+Price 2: 400
+Item 3: Oil
+Price 3: 300
+Bill Amount: 1200
+Status: paid

@@ -1,0 +1,10 @@
+
+Name: Soham Sood  
+Phone Number: 9876543210  
+Bill Type: Transport  
+Date: 2026-02-04  
+Time: 09:45  
+Item 1: Cab Ride  
+Price 1: 250  
+Bill Amount: 250  
+Status: paid
