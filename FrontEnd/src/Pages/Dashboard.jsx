@@ -115,7 +115,7 @@ export default function Dashboard() {
 
         Object.values(data).forEach((month) => {
           totalSum += month.sum;
-          totalCount += month.count;
+          totalCount += 1;
         });
 
         const avg = totalCount ? totalSum / totalCount : 0;
