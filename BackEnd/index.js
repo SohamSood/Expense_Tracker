@@ -8,6 +8,8 @@ const PORT = 5001;
 const receiptRoutes = require("./Routes/view_Recipts");
 const billRoutes = require("./Routes/bill_Routes");
 const averageRoutes = require("./Routes/average");
+const decreaseRoutes = require("./Routes/decrease");
+const increaseRoutes = require("./Routes/increase");
 
 app.use(cors());
 app.use(express.json());
@@ -17,6 +19,8 @@ app.use("/uploads", express.static(path.join(__dirname, "Uploads")));
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/bills", billRoutes);
 app.use("/api/average",averageRoutes);
+app.use("/api/decrease",decreaseRoutes);
+app.use("/api/increase",increaseRoutes);
 
 //direct endpoints
 app.get("/", (req, res) => {
