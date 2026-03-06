@@ -16,4 +16,22 @@ router.get("/", (req, res) => {
     })
 });
 
+router.get("/recent", (req, res) => {
+
+  const bills = data.bills;
+
+  const sorted = bills
+    .sort((a, b) => new Date(b.date) - new Date(a.date))
+    .slice(0, 6);
+
+  const formatted = sorted.map((bill, index) => ({
+    name: bill.type,
+    id: bill.id,
+    amount: bill.amount,
+    date: bill.date
+  }));
+
+  res.json(formatted);
+
+});
 module.exports = router;
