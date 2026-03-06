@@ -17,6 +17,8 @@ const data = require("../Data/sample.json");
 //     }) 
 //     res.json(monthlyMap);
 // });
+
+
 router.get("/", (req,res)=>{
 
     const bills = data.bills;
@@ -66,7 +68,7 @@ router.get("/", (req,res)=>{
         let avgsum = 0;
 
         if(monthlyMap[month]){
-            avgsum = monthlyMap[month].sum;
+            sum = monthlyMap[month].sum;
         }
 
         let prev = 0;
