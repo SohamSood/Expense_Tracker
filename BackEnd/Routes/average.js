@@ -81,7 +81,7 @@ router.get("/", (req,res)=>{
 
         result.push({
             month: month,
-            sum: avgsum,
+            sum: sum,
             previous: prev,
             difference: diff
         });
