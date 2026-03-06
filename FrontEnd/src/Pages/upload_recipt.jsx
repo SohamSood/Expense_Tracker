@@ -58,11 +58,58 @@ export default function UploadReceipt() {
     return <div className="rp-loading">Loading receipts…</div>;
   }
 
+  /* ===============================
+     SAVE SINGLE BILL
+  =============================== */
+
+  async function saveBill() {
+    if (!selectedText) return;
+
+    try {
+      const res = await fetch(
+        `http://localhost:5001/api/receipts/save/${selectedText}`,
+        { method: "POST" }
+      );
+
+      const data = await res.json();
+
+      alert(data.message || "Bill saved successfully");
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save bill");
+    }
+  }
+
+  /* ===============================
+     SAVE ALL BILLS
+  =============================== */
+
+  async function saveAllBills() {
+    try {
+      const res = await fetch(
+        "http://localhost:5001/api/receipts/save-all",
+        { method: "POST" }
+      );
+
+      const data = await res.json();
+
+      alert(`Saved: ${data.saved}\nSkipped duplicates: ${data.skipped}`);
+    } catch (err) {
+      console.error(err);
+      alert("Failed to save bills");
+    }
+  }
+
   return (
     <div className="rp-page">
       <div className="rp-topbar">
         <h1 className="rp-title">Receipts</h1>
         <span className="rp-subtitle">{files.length} files</span>
+
+        {/* SAVE ALL BUTTON */}
+        <button className="rp-save-btn" onClick={saveAllBills}>
+          Save All Bills
+        </button>
       </div>
 
       <div className="rp-grid">
@@ -89,14 +136,21 @@ export default function UploadReceipt() {
           <div className="rp-viewer-panel">
             <div className="rp-viewer-body">
               {textData && (
-                <div className="rp-text-card">
-                  {Object.entries(textData).map(([k, v]) => (
-                    <div key={k} className="rp-receipt-row">
-                      <span className="rp-receipt-label">{k}</span>
-                      <span className="rp-receipt-value">{v}</span>
-                    </div>
-                  ))}
-                </div>
+                <>
+                  <div className="rp-text-card">
+                    {Object.entries(textData).map(([k, v]) => (
+                      <div key={k} className="rp-receipt-row">
+                        <span className="rp-receipt-label">{k}</span>
+                        <span className="rp-receipt-value">{v}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* SAVE SINGLE BILL */}
+                  <button className="rp-save-btn" onClick={saveBill}>
+                    Save Bill
+                  </button>
+                </>
               )}
             </div>
           </div>

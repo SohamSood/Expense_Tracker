@@ -1,0 +1,11 @@
+Name: Soham Sood
+Phone Number: 9876543210
+Bill Type: Food
+Date: 2026-09-03
+Time: 12:50
+Item 1: Sandwich
+Price 1: 120
+Item 2: Juice
+Price 2: 80
+Bill Amount: 2
+Status: paid

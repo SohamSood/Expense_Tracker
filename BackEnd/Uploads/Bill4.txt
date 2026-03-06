@@ -1,0 +1,14 @@
+
+Name: Soham Sood  
+Phone Number: 9876543210  
+Bill Type: Grocery  
+Date: 2026-04-14  
+Time: 18:30  
+Item 1: Vegetables  
+Price 1: 300  
+Item 2: Fruits  
+Price 2: 250  
+Item 3: Milk  
+Price 3: 120  
+Bill Amount: 670  
+Status: paid

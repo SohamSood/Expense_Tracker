@@ -1,0 +1,9 @@
+Name: Soham Sood
+Phone Number: 9876543210
+Bill Type: Fuel
+Date: 2026-07-11
+Time: 08:20
+Item 1: Petrol
+Price 1: 1000
+Bill Amount: 1000
+Status: paid

@@ -2,7 +2,7 @@
   "name": "Soham Sood",
   "phone": "9876543210",
   "balance": 15000,
-  "login":1,
+  "login": 1,
   "bills": [
     {
       "id": 1,
@@ -26,7 +26,6 @@
         }
       ]
     },
-
     {
       "id": 2,
       "type": "Shopping",
@@ -60,6 +59,146 @@
         {
           "name": "Shoes",
           "price": 500
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "Food",
+      "date": "2026-01-12",
+      "time": "13:10",
+      "amount": 380,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Food",
+          "price": 380
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "Utility",
+      "date": "2026-10-10",
+      "time": "19:10",
+      "amount": 18,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Utility",
+          "price": 18
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "type": "Grocery",
+      "date": "2026-11-18",
+      "time": "18:00",
+      "amount": 1200,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Grocery",
+          "price": 1200
+        }
+      ]
+    },
+    {
+      "id": 7,
+      "type": "Entertainment",
+      "date": "2026-12-24",
+      "time": "21:00",
+      "amount": 2000,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Entertainment",
+          "price": 2000
+        }
+      ]
+    },
+    {
+      "id": 8,
+      "type": "Transport",
+      "date": "2026-02-04",
+      "time": "09:45",
+      "amount": 250,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Transport",
+          "price": 250
+        }
+      ]
+    },
+    {
+      "id": 9,
+      "type": "Grocery",
+      "date": "2026-04-14",
+      "time": "18:30",
+      "amount": 670,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Grocery",
+          "price": 670
+        }
+      ]
+    },
+    {
+      "id": 10,
+      "type": "Entertainment",
+      "date": "2026-05-09",
+      "time": "20:15",
+      "amount": 550,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Entertainment",
+          "price": 550
+        }
+      ]
+    },
+    {
+      "id": 11,
+      "type": "Fuel",
+      "date": "2026-07-11",
+      "time": "08:20",
+      "amount": 1000,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Fuel",
+          "price": 1000
+        }
+      ]
+    },
+    {
+      "id": 12,
+      "type": "Shopping",
+      "date": "2026-08-21",
+      "time": "17:40",
+      "amount": 1400,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Shopping",
+          "price": 1400
+        }
+      ]
+    },
+    {
+      "id": 13,
+      "type": "Food",
+      "date": "2026-09-03",
+      "time": "12:50",
+      "amount": 2,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Food",
+          "price": 2
         }
       ]
     }

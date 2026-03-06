@@ -1,0 +1,9 @@
+Name: Soham Sood
+Phone Number: 9876543210
+Bill Type: Entertainment
+Date: 2026-12-24
+Time: 21:00
+Item 1: Concert Ticket
+Price 1: 2000
+Bill Amount: 2000
+Status: paid

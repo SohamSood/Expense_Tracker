@@ -1,0 +1,94 @@
+{
+  "name": "Soham Sood",
+  "phone": "9876543210",
+  "balance": 15000,
+  "login": 1,
+  "bills": [
+    {
+      "id": 1,
+      "type": "Food",
+      "date": "2026-06-05",
+      "time": "14:30",
+      "amount": 350,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Burger",
+          "price": 150
+        },
+        {
+          "name": "Fries",
+          "price": 100
+        },
+        {
+          "name": "Drink",
+          "price": 100
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "Shopping",
+      "date": "2026-03-06",
+      "time": "16:10",
+      "amount": 1200,
+      "status": "pending",
+      "items": [
+        {
+          "name": "T-shirt",
+          "price": 700
+        },
+        {
+          "name": "Shoes",
+          "price": 500
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "Shopping",
+      "date": "2026-03-06",
+      "time": "16:10",
+      "amount": 1200,
+      "status": "pending",
+      "items": [
+        {
+          "name": "T-shirt",
+          "price": 700
+        },
+        {
+          "name": "Shoes",
+          "price": 500
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "Other",
+      "date": "2026-03-06",
+      "time": "17:42",
+      "amount": 0,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Item",
+          "price": 0
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "Other",
+      "date": "2026-03-06",
+      "time": "17:42",
+      "amount": 0,
+      "status": "paid",
+      "items": [
+        {
+          "name": "Item",
+          "price": 0
+        }
+      ]
+    }
+  ]
+}

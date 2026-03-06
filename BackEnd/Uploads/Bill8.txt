@@ -1,0 +1,11 @@
+Name: Soham Sood
+Phone Number: 9876543210
+Bill Type: Shopping
+Date: 2026-08-21
+Time: 17:40
+Item 1: Backpack
+Price 1: 1200
+Item 2: Notebook
+Price 2: 200
+Bill Amount: 1400
+Status: paid

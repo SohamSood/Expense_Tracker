@@ -230,3 +230,18 @@
   height: 100vh;
   color: #a09890;
 }
+
+.rp-save-btn {
+  margin-top: 12px;
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #2e7d32;
+  color: white;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+.rp-save-btn:hover {
+  background: #256628;
+}

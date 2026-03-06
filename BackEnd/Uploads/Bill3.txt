@@ -1,0 +1,12 @@
+
+Name: Soham Sood  
+Phone Number: 9876543210  
+Bill Type: Shopping  
+Date: 2026-03-06  
+Time: 16:10  
+Item 1: T-shirt  
+Price 1: 700  
+Item 2: Shoes  
+Price 2: 500  
+Bill Amount: 1200  
+Status: paid
