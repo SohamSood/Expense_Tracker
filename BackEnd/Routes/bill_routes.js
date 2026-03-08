@@ -9,10 +9,6 @@ function readData() {
   return JSON.parse(fs.readFileSync(filePath, "utf8"));
 }
 
-function writeData(data) {
-  fs.writeFileSync(filePath, JSON.stringify(data, null, 2));
-}
-
 router.get("/", (req, res) => {
   const data = readData();
   const bills = data.bills;
@@ -27,20 +23,6 @@ router.get("/", (req, res) => {
     totalamount: total,
     remaining: data.balance - total,
   });
-});
-
-router.post("/", (req, res) => {
-  const data = readData();
-  const newId = data.bills.length + 1;
-  const newBill = {
-    id: newId,
-    ...req.body,
-  };
-
-  data.bills.push(newBill);
-  writeData(data);
-
-  res.json(newBill);
 });
 
 router.get("/recent", (req, res) => {

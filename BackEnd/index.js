@@ -84,7 +84,8 @@ const PORT = 5001;
 
 //routes endpoints
 const receiptRoutes = require("./Routes/view_Recipts");
-const billRoutes = require("./Routes/bill_Routes");
+const billRoutes = require("./Routes/bill_routes");
+const addBillRoutes = require("./Routes/add_bill");
 const averageRoutes = require("./Routes/average");
 const decreaseRoutes = require("./Routes/decrease");
 const increaseRoutes = require("./Routes/increase");
@@ -105,6 +106,7 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "Uploads")));
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/bills", billRoutes);
+app.use("/api/bills", addBillRoutes);
 app.use("/api/average",averageRoutes);
 app.use("/api/decrease",decreaseRoutes);
 app.use("/api/increase",increaseRoutes);

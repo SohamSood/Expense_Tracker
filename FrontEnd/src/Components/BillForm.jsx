@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { addBill } from "../JS/BillForm";
 
 export default function BillForm({ onSubmit }) {
   const [type, setType] = useState("");
@@ -22,19 +23,7 @@ export default function BillForm({ onSubmit }) {
 
     try {
       setIsSubmitting(true);
-      const response = await fetch("http://localhost:5001/api/bills", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(billData),
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to save bill");
-      }
-
-      const createdBill = await response.json();
+      const createdBill = await addBill(billData);
       onSubmit(createdBill);
 
       setType("");
