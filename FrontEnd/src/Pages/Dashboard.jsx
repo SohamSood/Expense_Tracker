@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import "../CSS/dashboard.css";
 
 const stats = [
-  { title: "Total Balance", value: "-1000000", tone: "wide" },
+  { title: "Total Balance", value: "1000000", tone: "wide" },
   { title: "Average Spending", tone: "accent" },
   { title: "Total Spending" },
   { title: "Total Income" },
