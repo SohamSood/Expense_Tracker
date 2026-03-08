@@ -7,12 +7,6 @@ const router = express.Router();
 const UPLOADS_DIR = path.join(__dirname, "../Uploads");
 const DB_PATH = path.join(__dirname, "../Data/sample.json");
 
-
-
-/* ===============================
-   GET ALL FILES FROM UPLOADS
-================================ */
-
 router.get("/", async (req, res) => {
   try {
 
@@ -30,10 +24,6 @@ router.get("/", async (req, res) => {
 });
 
 
-
-/* ===============================
-   READ TEXT BILL
-================================ */
 
 router.get("/text/:filename", async (req, res) => {
   try {
@@ -66,10 +56,6 @@ router.get("/text/:filename", async (req, res) => {
 });
 
 
-
-/* ===============================
-   SAVE SINGLE BILL
-================================ */
 router.post("/save/:filename", async (req, res) => {
   try {
 
@@ -136,9 +122,7 @@ router.post("/save/:filename", async (req, res) => {
 
 
 
-/* ===============================
-   SAVE ALL BILLS (BATCH)
-================================ */
+
 
 router.post("/save-all", async (req, res) => {
   try {
