@@ -189,7 +189,7 @@ router.post("/save-all", async (req, res) => {
     await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2));
 
     res.json({
-      message: "Batch processing finished",
+      message: "processing finished",
       saved,
       skipped
     });
