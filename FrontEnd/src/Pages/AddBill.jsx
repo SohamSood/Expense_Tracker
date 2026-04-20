@@ -1,131 +1,109 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import BillForm from "../Components/BillForm";
-import "../CSS/addbill.css";
-import "../CSS/dashboard.css";
-
-const sideItems = [
-  { label: "Dashboard", icon: "◫", path: "/dashboard" },
-  { label: "Add Bill", icon: "↔", path: "/add-bill", active: true },
-  { label: "View Bills", icon: "▤", path: "/view_Bills" },
-  { label: "Cards", icon: "▣" },
-  { label: "Settings", icon: "⚙" },
-];
-
-function Brand() {
-  return (
-    <div className="db-brand">
-      <span className="db-brand__mark">
-        <span />
-      </span>
-      <span className="db-brand__text">Expense Tracker</span>
-    </div>
-  );
-}
+import React, { useState } from 'react';
+import { 
+  PlusCircle, 
+  CheckCircle2, 
+  ArrowLeft,
+  Calendar,
+  Clock as ClockIcon,
+  Tag,
+  CreditCard
+} from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Card, Button, Input, Badge, cn } from '../Components/ui';
+import BillForm from '../Components/BillForm';
 
 export default function AddBill() {
   const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
   const [submittedBill, setSubmittedBill] = useState(null);
 
   const handleAddBill = (billData) => {
     setSubmittedBill(billData);
+    // Auto clear after 5 seconds
+    setTimeout(() => setSubmittedBill(null), 10000);
   };
 
   return (
-    <main className="db-page">
-      <div className="db-shell">
-        <aside className="db-sidebar">
-          <Brand />
-          <nav className="db-sidebar__nav">
-            {sideItems.map((item) => (
-              <button
-                type="button"
-                key={item.label}
-                className={`db-sideitem ${item.active ? "is-active" : ""}`}
-                aria-label={item.label}
-                title={item.label}
-                onClick={item.path ? () => navigate(item.path) : undefined}
-              >
-                <span>{item.icon}</span>
-              </button>
-            ))}
-          </nav>
-          <button type="button" className="db-sideitem db-sideitem--bottom">
-            <span>?</span>
+    <div className="add-bill-container">
+      <div className="page-header-row">
+        <div>
+          <button className="back-btn" onClick={() => navigate(-1)}>
+            <ArrowLeft size={20} /> Back
           </button>
-        </aside>
-
-        <section className="db-main">
-          <header className="db-topbar">
-            <div className="db-tabs">
-              <button type="button" className="is-active">
-                Overview
-              </button>
-              <button type="button">Activity</button>
-              <button type="button">Manage</button>
-              <button type="button">Program</button>
-              <button type="button">Account</button>
-              <button type="button">Reports</button>
-            </div>
-
-            <div className="db-topbar__right">
-              <div className="db-topbar__icons">
-                <button type="button">⌕</button>
-                <button type="button">◌</button>
-                <button type="button">!</button>
-              </div>
-
-              <div className={`db-profile ${dropdownOpen ? "is-open" : ""}`}>
-                <button
-                  type="button"
-                  className="db-profile__button"
-                  onClick={() => setDropdownOpen((open) => !open)}
-                >
-                  <span className="db-profile__avatar">SS</span>
-                  <span className="db-profile__meta">
-                    <strong>Sunaina Sharma</strong>
-                    <small>sunaina.sharma@expense.app</small>
-                  </span>
-                  <span className="db-profile__chevron">⌄</span>
-                </button>
-
-                <div className="db-profile__menu">
-                  <button type="button">Account</button>
-                  <button type="button">Settings</button>
-                  <button type="button">Logout</button>
-                </div>
-              </div>
-            </div>
-          </header>
-
-          <div className="db-content">
-            <section className="add-bill-page">
-              <div className="add-bill-page__header">
-                <p className="db-welcome__eyebrow">Expense management</p>
-                <h1>Add Bills</h1>
-                <p>Track a new bill and review the latest submitted details.</p>
-              </div>
-
-              <div className="add-bill-card db-card">
-                <BillForm onSubmit={handleAddBill} />
-              </div>
-
-              {submittedBill ? (
-                <div className="add-bill-card db-card">
-                  <h3>Latest Submission</h3>
-                  <p>ID: {submittedBill.id}</p>
-                  <p>Type: {submittedBill.type}</p>
-                  <p>Amount: ₹{submittedBill.amount}</p>
-                  <p>Date: {submittedBill.date}</p>
-                  <p>Time: {submittedBill.time}</p>
-                  <p>Status: {submittedBill.status}</p>
-                </div>
-              ) : null}
-            </section>
-          </div>
-        </section>
+          <h1 className="page-title">Add New Expense</h1>
+          <p className="page-subtitle">Record your spending manually for accurate tracking</p>
+        </div>
       </div>
-    </main>
+
+      <div className="add-bill-grid">
+        <Card className="form-card">
+          <BillForm onSubmit={handleAddBill} />
+        </Card>
+
+        <div className="add-bill-sidebar">
+          {submittedBill ? (
+            <Card className="success-card glass">
+              <div className="success-header">
+                <CheckCircle2 className="success-icon" />
+                <h3>Recent Submission</h3>
+              </div>
+              <div className="submission-details">
+                <div className="detail-item">
+                  <Tag size={16} />
+                  <span>{submittedBill.type}</span>
+                </div>
+                <div className="detail-item">
+                  <CreditCard size={16} />
+                  <span className="font-bold">₹{submittedBill.amount}</span>
+                </div>
+                <div className="detail-item">
+                  <Calendar size={16} />
+                  <span>{submittedBill.date}</span>
+                </div>
+                <div className="detail-item">
+                  <ClockIcon size={16} />
+                  <span>{submittedBill.time}</span>
+                </div>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm" 
+                className="w-full mt-4"
+                onClick={() => setSubmittedBill(null)}
+              >
+                Clear
+              </Button>
+            </Card>
+          ) : (
+            <Card className="info-card">
+              <h3>Quick Tips</h3>
+              <ul className="tips-list">
+                <li>Double check the amount before submitting.</li>
+                <li>Choose a relevant category for better insights.</li>
+                <li>You can also upload a receipt to auto-fill details.</li>
+              </ul>
+              <Button 
+                variant="secondary" 
+                className="w-full mt-4"
+                onClick={() => navigate('/upload_Recipt')}
+              >
+                Upload Receipt instead
+              </Button>
+            </Card>
+          )}
+
+          <Card className="category-helper">
+            <h3>Common Categories</h3>
+            <div className="category-tags">
+              <Badge variant="primary">Food</Badge>
+              <Badge variant="primary">Transport</Badge>
+              <Badge variant="primary">Groceries</Badge>
+              <Badge variant="primary">Health</Badge>
+              <Badge variant="primary">Leisure</Badge>
+              <Badge variant="primary">Other</Badge>
+            </div>
+          </Card>
+        </div>
+      </div>
+    </div>
   );
 }

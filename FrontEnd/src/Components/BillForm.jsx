@@ -1,113 +1,126 @@
-import { useState } from "react";
-import { addBill } from "../JS/BillForm";
+import React, { useState } from 'react';
+import { Send, Loader2 } from 'lucide-react';
+import { Button, Input } from './ui';
+import { addBill } from '../JS/BillForm';
 
 export default function BillForm({ onSubmit }) {
-  const [type, setType] = useState("");
-  const [date, setDate] = useState("");
-  const [time, setTime] = useState("");
-  const [amount, setAmount] = useState("");
-  const [status, setStatus] = useState("paid");
+  const [formData, setFormData] = useState({
+    type: '',
+    date: new Date().toISOString().split('T')[0],
+    time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+    amount: '',
+    status: 'paid'
+  });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({ ...prev, [name]: value }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    const billData = {
-      type,
-      date,
-      time,
-      amount: Number(amount),
-      status,
-      items: [],
-    };
+    if (!formData.type || !formData.amount) return;
 
     try {
       setIsSubmitting(true);
+      const billData = {
+        ...formData,
+        amount: Number(formData.amount),
+        items: []
+      };
+      
       const createdBill = await addBill(billData);
       onSubmit(createdBill);
-
-      setType("");
-      setDate("");
-      setTime("");
-      setAmount("");
-      setStatus("paid");
+      
+      // Reset form
+      setFormData({
+        type: '',
+        date: new Date().toISOString().split('T')[0],
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit', hour12: false }),
+        amount: '',
+        status: 'paid'
+      });
     } catch (error) {
-      console.error(error);
+      console.error('Error submitting bill:', error);
+      alert('Failed to add bill. Please check your backend connection.');
     } finally {
       setIsSubmitting(false);
     }
   };
 
   return (
-    <form className="add-bill-form" onSubmit={handleSubmit}>
-      <h2 className="add-bill-form__title">Add New Bill</h2>
-
-      <div className="add-bill-form__field">
-        <label htmlFor="bill-type">Type</label>
-        <input
-          id="bill-type"
-          type="text"
-          placeholder="Food / Shopping"
-          value={type}
-          onChange={(e) => setType(e.target.value)}
+    <form className="bill-form" onSubmit={handleSubmit}>
+      <div className="form-section">
+        <Input
+          label="Title / Category"
+          name="type"
+          placeholder="e.g. Starbucks Coffee, Office Lunch"
+          value={formData.type}
+          onChange={handleChange}
           required
         />
       </div>
 
-      <div className="add-bill-form__grid">
-        <div className="add-bill-form__field">
-          <label htmlFor="bill-date">Date</label>
-          <input
-            id="bill-date"
-            type="date"
-            value={date}
-            onChange={(e) => setDate(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="add-bill-form__field">
-          <label htmlFor="bill-time">Time</label>
-          <input
-            id="bill-time"
-            type="time"
-            value={time}
-            onChange={(e) => setTime(e.target.value)}
-            required
-          />
-        </div>
+      <div className="form-grid">
+        <Input
+          label="Date"
+          name="date"
+          type="date"
+          value={formData.date}
+          onChange={handleChange}
+          required
+        />
+        <Input
+          label="Time"
+          name="time"
+          type="time"
+          value={formData.time}
+          onChange={handleChange}
+          required
+        />
       </div>
 
-      <div className="add-bill-form__grid">
-        <div className="add-bill-form__field">
-          <label htmlFor="bill-amount">Amount</label>
-          <input
-            id="bill-amount"
-            type="number"
-            min="0"
-            placeholder="Enter amount"
-            value={amount}
-            onChange={(e) => setAmount(e.target.value)}
-            required
-          />
-        </div>
-
-        <div className="add-bill-form__field">
-          <label htmlFor="bill-status">Status</label>
-          <select
-            id="bill-status"
-            value={status}
-            onChange={(e) => setStatus(e.target.value)}
+      <div className="form-grid">
+        <Input
+          label="Amount (₹)"
+          name="amount"
+          type="number"
+          placeholder="0.00"
+          min="0"
+          value={formData.amount}
+          onChange={handleChange}
+          required
+        />
+        <div className="ui-input-group">
+          <label className="ui-label">Payment Status</label>
+          <select 
+            className="ui-input"
+            name="status"
+            value={formData.status}
+            onChange={handleChange}
           >
-            <option value="paid">paid</option>
-            <option value="pending">pending</option>
+            <option value="paid">Paid</option>
+            <option value="pending">Pending</option>
           </select>
         </div>
       </div>
 
-      <button className="add-bill-form__submit" type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Submitting..." : "Add Bill"}
-      </button>
+      <Button 
+        type="submit" 
+        className="w-full mt-4" 
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? (
+          <>
+            <Loader2 className="animate-spin" size={18} /> Submitting...
+          </>
+        ) : (
+          <>
+            <Send size={18} /> Add Bill
+          </>
+        )}
+      </Button>
     </form>
   );
 }

@@ -1,365 +1,260 @@
-import { useMemo, useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
-import "../CSS/dashboard.css";
+import React, { useState, useEffect, useMemo } from 'react';
+import { 
+  TrendingUp, 
+  TrendingDown, 
+  Wallet, 
+  Clock, 
+  ArrowUpRight,
+  Filter,
+  Search as SearchIcon,
+  MoreVertical
+} from 'lucide-react';
+import { 
+  BarChart, 
+  Bar, 
+  XAxis, 
+  YAxis, 
+  CartesianGrid, 
+  Tooltip, 
+  ResponsiveContainer,
+  Cell,
+  AreaChart,
+  Area
+} from 'recharts';
+import { Card, Button, Badge, cn } from '../Components/ui';
+import { api } from '../utils/api';
 
-const stats = [
-  { title: "Total Balance", value: "1000000", tone: "wide" },
-  { title: "Average Spending", tone: "accent" },
-  { title: "Total Spending" },
-  { title: "Total Income" },
-  { title: "Months Counted" },
-];
-
-const chartData = [
-  { month: "Jan", profit: 28, loss: 19 },
-  { month: "Feb", profit: 34, loss: 16 },
-  { month: "Mar", profit: 26, loss: 13 },
-  { month: "Apr", profit: 31, loss: 18 },
-  { month: "May", profit: 35, loss: 16 },
-  { month: "Jun", profit: 41, loss: 24 },
-  { month: "Jul", profit: 33, loss: 18 },
-  { month: "Aug", profit: 27, loss: 14 },
-];
-
-const sideItems = [
-  { label: "Dashboard", icon: "◫", path: "/dashboard", active: true },
-  { label: "Add Bill", icon: "↔", path: "/add-bill" },
-  { label: "View Bills", icon: "▤", path: "/view_Bills" },
-  { label: "Cards", icon: "▣" },
-  { label: "Settings", icon: "⚙" },
-];
-
-function Brand() {
-  return (
-    <div className="db-brand">
-      <span className="db-brand__mark">
-        <span />
-      </span>
-      <span className="db-brand__text">Expense Tracker</span>
-    </div>
-  );
-}
-
-function AnalyticsChart() {
-  return (
-    <div className="db-chart">
-      <div className="db-chart__header">
-        <div>
-          <h3>Total Income</h3>
-          <p>View your income in a certain period of time</p>
-        </div>
-        <div className="db-chart__legend">
-          <span>
-            <i className="profit" />
-            Profit
-          </span>
-          <span>
-            <i className="loss" />
-            Loss
-          </span>
-        </div>
-      </div>
-
-      <div className="db-chart__body">
-        {chartData.map((item) => (
-          <div key={item.month} className="db-chart__group">
-            <div className="db-chart__bars">
-              <span
-                className="profit"
-                style={{ height: `${item.profit * 1.7}px` }}
-              />
-              <span
-                className="loss"
-                style={{ height: `${item.loss * 1.7}px` }}
-              />
-            </div>
-            <small>{item.month}</small>
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+const COLORS = ['#6366f1', '#10b981', '#f59e0b', '#ef4444'];
 
 export default function Dashboard() {
-  const navigate = useNavigate();
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [totalSpending, setTotalSpending] = useState("0");
-  const [avgSpending, setAvgSpending] = useState("0");
-  const [monthCounted, setMonthCounted] = useState("0");
-  const [user, setUser] = useState("Name here");
-  const featuredStats = useMemo(() => stats.slice(1), []);
   const [recentBills, setRecentBills] = useState([]);
+  const [stats, setStats] = useState({
+    totalSum: 0,
+    avgSpending: 0,
+    monthCount: 0
+  });
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    async function fetchRecentBills() {
+    async function fetchData() {
       try {
-        const res = await fetch("http://localhost:5001/api/bills/recent");
-        const data = await res.json();
-        setRecentBills(data);
-      } catch (err) {
-        console.error(err);
-      }
-    }
-
-    fetchRecentBills();
-  }, []);
-
-
-
-  useEffect(() => {
-    async function fetchAverage() {
-      try {
-        const res = await fetch("http://localhost:5001/api/average");
-        const data = await res.json();
-
+        setLoading(true);
+        const [billsData, avgData] = await Promise.all([
+          api.get('/bills/recent'),
+          api.get('/average')
+        ]);
+        
+        setRecentBills(billsData);
+        
+        // Calculate stats
         let totalSum = 0;
         let totalCount = 0;
-
-        Object.values(data).forEach((month) => {
+        Object.values(avgData).forEach((month) => {
           totalSum += month.sum;
           totalCount += 1;
         });
-
-        const avg = totalCount ? totalSum / totalCount : 0;
-
-        setTotalSpending(totalSum.toFixed(2));
-        setAvgSpending(avg.toFixed(2));
-        setMonthCounted(totalCount);
+        
+        setStats({
+          totalSum,
+          avgSpending: totalCount ? totalSum / totalCount : 0,
+          monthCount: totalCount
+        });
       } catch (err) {
-        console.error(err);
+        console.error('Error fetching dashboard data:', err);
+      } finally {
+        setLoading(false);
       }
     }
-
-    fetchAverage();
+    fetchData();
   }, []);
 
-useEffect(() => {
-  async function fetchUser() {
-    try {
-      const res = await fetch("http://localhost:5001/api/user");
-      const data = await res.json();
+  const chartData = [
+    { name: 'Jan', value: 4000 },
+    { name: 'Feb', value: 3000 },
+    { name: 'Mar', value: 2000 },
+    { name: 'Apr', value: 2780 },
+    { name: 'May', value: 1890 },
+    { name: 'Jun', value: 2390 },
+    { name: 'Jul', value: 3490 },
+  ];
 
-      setUser(data.name);
-
-    } catch (err) {
-      console.error(err);
-    }
+  if (loading) {
+    return (
+      <div className="loading-state">
+        <div className="spinner" />
+        <p>Loading your dashboard...</p>
+      </div>
+    );
   }
 
-  fetchUser();
-}, []);
-
   return (
-    <main className="db-page">
-      <div className="db-shell">
-        <aside className="db-sidebar">
-          <Brand />
-          <nav className="db-sidebar__nav">
-            {sideItems.map((item) => (
-              <button
-                type="button"
-                key={item.label}
-                className={`db-sideitem ${item.active ? "is-active" : ""}`}
-                aria-label={item.label}
-                title={item.label}
-                onClick={item.path ? () => navigate(item.path) : undefined}
-              >
-                <span>{item.icon}</span>
-              </button>
-            ))}
-          </nav>
-          <button type="button" className="db-sideitem db-sideitem--bottom">
-            <span>?</span>
-          </button>
-        </aside>
-
-        <section className="db-main">
-          <header className="db-topbar">
-            <div className="db-tabs">
-              <button type="button" className="is-active">
-                Overview
-              </button>
-              <button type="button">Activity</button>
-              <button type="button">Manage</button>
-              <button type="button">Program</button>
-              <button type="button">Account</button>
-              <button type="button">Reports</button>
+    <div className="dashboard-grid">
+      {/* Summary Cards */}
+      <div className="summary-cards">
+        <Card className="summary-card">
+          <div className="card-header">
+            <div className="icon-wrapper primary">
+              <Wallet size={20} />
             </div>
+            <Badge variant="success">+12%</Badge>
+          </div>
+          <div className="card-body">
+            <p className="label">Total Spending</p>
+            <h2 className="value">₹{stats.totalSum.toLocaleString()}</h2>
+            <p className="sub-label">Across {stats.monthCount} months</p>
+          </div>
+        </Card>
 
-            <div className="db-topbar__right">
-              <div className="db-topbar__icons">
-                <button type="button">⌕</button>
-                <button type="button">◌</button>
-                <button type="button">!</button>
-              </div>
-
-              <div className={`db-profile ${dropdownOpen ? "is-open" : ""}`}>
-                <button
-                  type="button"
-                  className="db-profile__button"
-                  onClick={() => setDropdownOpen((open) => !open)}
-                >
-                  <span className="db-profile__avatar">SS</span>
-                  <span className="db-profile__meta">
-                    <strong>{user}</strong>
-                    <small>{user.split(" ")[0]}@expense.app</small>
-                  </span>
-                  <span className="db-profile__chevron">⌄</span>
-                </button>
-
-                <div className="db-profile__menu">
-                  <button type="button">Account</button>
-                  <button type="button">Settings</button>
-                  <button type="button">Logout</button>
-                </div>
-              </div>
+        <Card className="summary-card">
+          <div className="card-header">
+            <div className="icon-wrapper success">
+              <TrendingUp size={20} />
             </div>
-          </header>
+            <Badge variant="primary">Stable</Badge>
+          </div>
+          <div className="card-body">
+            <p className="label">Avg. Monthly</p>
+            <h2 className="value">₹{stats.avgSpending.toLocaleString(undefined, { maximumFractionDigits: 0 })}</h2>
+            <p className="sub-label">On track with budget</p>
+          </div>
+        </Card>
 
-          <div className="db-welcome">
+        <Card className="summary-card">
+          <div className="card-header">
+            <div className="icon-wrapper warning">
+              <Clock size={20} />
+            </div>
+            <Badge variant="warning">Alert</Badge>
+          </div>
+          <div className="card-body">
+            <p className="label">Active Months</p>
+            <h2 className="value">{stats.monthCount}</h2>
+            <p className="sub-label">Data recorded</p>
+          </div>
+        </Card>
+      </div>
+
+      {/* Main Content Areas */}
+      <div className="dashboard-main-grid">
+        {/* Analytics Chart */}
+        <Card className="chart-card">
+          <div className="card-header-row">
             <div>
-              <p className="db-welcome__eyebrow">Expense overview</p>
-              <h1>Good morning, {user}</h1>
-              <p>
-                Stay on top of your spending, savings, and account activity.
-              </p>
+              <h3>Spending Analytics</h3>
+              <p className="text-secondary">Your spending trend over time</p>
+            </div>
+            <div className="actions">
+              <Button variant="outline" size="sm">
+                <Filter size={16} /> Filter
+              </Button>
             </div>
           </div>
+          
+          <div className="chart-container">
+            <ResponsiveContainer width="100%" height={300}>
+              <AreaChart data={chartData}>
+                <defs>
+                  <linearGradient id="colorValue" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="5%" stopColor="#6366f1" stopOpacity={0.3}/>
+                    <stop offset="95%" stopColor="#6366f1" stopOpacity={0}/>
+                  </linearGradient>
+                </defs>
+                <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="var(--border-light)" />
+                <XAxis 
+                  dataKey="name" 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: 'var(--text-tertiary)', fontSize: 12 }}
+                  dy={10}
+                />
+                <YAxis 
+                  axisLine={false} 
+                  tickLine={false} 
+                  tick={{ fill: 'var(--text-tertiary)', fontSize: 12 }}
+                  tickFormatter={(value) => `₹${value}`}
+                />
+                <Tooltip 
+                  contentStyle={{ 
+                    backgroundColor: 'var(--bg-primary)', 
+                    borderColor: 'var(--border-light)',
+                    borderRadius: '8px',
+                    fontSize: '12px',
+                    color: 'var(--text-primary)'
+                  }}
+                />
+                <Area 
+                  type="monotone" 
+                  dataKey="value" 
+                  stroke="#6366f1" 
+                  strokeWidth={3}
+                  fillOpacity={1} 
+                  fill="url(#colorValue)" 
+                />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </Card>
 
-          <section className="db-grid">
-            <div className="db-column db-column--primary">
-              <article className="db-card db-balance-card">
-                <div className="db-card__row">
+        {/* Categories / Wallets */}
+        <Card className="wallets-card">
+          <div className="card-header-row">
+            <h3>My Wallets</h3>
+            <Button variant="ghost" size="sm"><ArrowUpRight size={16} /></Button>
+          </div>
+          <div className="wallets-list">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="wallet-item">
+                <div className="wallet-info">
+                  <div className={cn("wallet-icon", i === 1 ? "primary" : i === 2 ? "success" : "warning")} />
                   <div>
-                    <p>Total Balance</p>
-                    <h2>{stats[0].value}</h2>
-                  </div>
-                  <div className="db-chip">INR</div>
-                </div>
-                <span className="db-growth">
-                  {stats[0].change} than last month
-                </span>
-
-                <div className="db-balance-actions">
-                  <button type="button" className="is-dark">
-                    Transfer
-                  </button>
-                  <button type="button">Request</button>
-                </div>
-
-                <div className="db-wallets">
-                  <div className="db-wallet">
-                    <strong>₹22,678.00</strong>
-                    <span>Wallet 01</span>
-                    <small>Active</small>
-                  </div>
-                  <div className="db-wallet">
-                    <strong>₹18,345.00</strong>
-                    <span>Wallet 02</span>
-                    <small>Active</small>
-                  </div>
-                  <div className="db-wallet">
-                    <strong>₹15,000.00</strong>
-                    <span>Wallet 03</span>
-                    <small>Active</small>
+                    <p className="wallet-name">Wallet 0{i}</p>
+                    <p className="wallet-status">Active</p>
                   </div>
                 </div>
-              </article>
-
-              <article className="db-card db-limit-card">
-                <h3>Monthly Spending Limit</h3>
-                <div className="db-progress">
-                  <span />
+                <div className="wallet-balance">
+                  ₹{(20000 - i * 3000).toLocaleString()}
                 </div>
-                <div className="db-progress__labels">
-                  <strong>₹1,400.00 spent</strong>
-                  <span>of ₹5,500.00</span>
-                </div>
-              </article>
-
-              <article className="db-card db-cards-card">
-                <div className="db-card__row">
-                  <h3>My Cards</h3>
-                  <button type="button" className="db-add-btn">
-                    + Add new
-                  </button>
-                </div>
-                <div className="db-card-stack">
-                  <div className="db-bank-card db-bank-card--dark">
-                    <span>Expense Prime</span>
-                    <strong>₹ 98,500</strong>
-                    <small>Active</small>
-                  </div>
-                  <div className="db-bank-card db-bank-card--blue">
-                    <span>Expense Plus</span>
-                    <strong>₹ 42,000</strong>
-                    <small>Active</small>
-                  </div>
-                </div>
-              </article>
-            </div>
-
-            <div className="db-column db-column--secondary">
-              <div className="db-stat-grid">
-                {featuredStats.map((item) => {
-                  let value = item.value;
-
-                  if (item.title === "Total Spending") {
-                    value = `₹${totalSpending}`;
-                  } else if (item.title === "Average Spending") {
-                    value = `₹${avgSpending}`;
-                  } else if (item.title === "Months Counted") {
-                    value = `${monthCounted}`;
-                  }
-
-                  return (
-                    <article
-                      key={item.title}
-                      className={`db-card db-stat-card ${item.tone === "accent" ? "is-accent" : ""}`}
-                    >
-                      <p>{item.title}</p>
-                      <h3>{value}</h3>
-                    </article>
-                  );
-                })}
               </div>
-
-              <AnalyticsChart />
-            </div>
-          </section>
-
-          <section className="db-card db-activity-card">
-            <div className="db-card__row">
-              <h3>Recent Activities</h3>
-              <div className="db-table-tools">
-                <input type="text" placeholder="Search" />
-                <button type="button">Filter</button>
-              </div>
-            </div>
-
-            <div className="db-table">
-              <div className="db-table__head">
-                <span>Order ID</span>
-                <span>Type</span>
-                <span>Price</span>
-                <span>Status</span>
-                <span>Date</span>
-              </div>
-
-              {recentBills.map((bill) => (
-                <div key={bill.id} className="db-table__row">
-                  <span>{bill.id}</span>
-                  <span>{bill.name}</span>
-                  <span>₹{bill.amount}</span>
-                  <span className="db-status completed">Recorded</span>
-                  <span>{new Date(bill.date).toLocaleDateString()}</span>
-                </div>
-              ))}
-            </div>
-          </section>
-        </section>
+            ))}
+          </div>
+          <Button className="w-full mt-4" variant="outline">Manage Wallets</Button>
+        </Card>
       </div>
-    </main>
+
+      {/* Recent Activity */}
+      <Card className="activity-card">
+        <div className="card-header-row">
+          <h3>Recent activity</h3>
+          <div className="search-input">
+            <SearchIcon size={16} />
+            <input type="text" placeholder="Search activities..." />
+          </div>
+        </div>
+
+        <div className="activity-list">
+          {recentBills.length === 0 ? (
+            <div className="empty-state">No recent activities found.</div>
+          ) : (
+            recentBills.map((bill) => (
+              <div key={bill.id} className="activity-item">
+                <div className="activity-info">
+                  <div className="activity-icon-container">
+                    <Receipt size={18} />
+                  </div>
+                  <div>
+                    <p className="activity-title">{bill.name || bill.type}</p>
+                    <p className="activity-date">{new Date(bill.date).toLocaleDateString()}</p>
+                  </div>
+                </div>
+                <div className="activity-meta">
+                  <p className="activity-amount">₹{bill.amount}</p>
+                  <Badge variant="success">Recorded</Badge>
+                </div>
+              </div>
+            ))
+          )}
+        </div>
+      </Card>
+    </div>
   );
 }

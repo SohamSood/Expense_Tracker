@@ -1,0 +1,28 @@
+
+> frontend@0.0.0 build
+> vite build
+
+vite v7.3.1 building client environment for production...
+transforming...
+✓ 2808 modules transformed.
+✗ Build failed in 1.56s
+error during build:
+src/Pages/Login.jsx (3:42): "Github" is not exported by "node_modules/lucide-react/dist/esm/lucide-react.js", imported by "src/Pages/Login.jsx".
+file: /Users/anshumangarg/Documents/Projects/2nd Year/Expense_Tracker/FrontEnd/src/Pages/Login.jsx:3:42
+
+1: import React, { useState } from 'react';
+2: import { useNavigate } from 'react-router-dom';
+3: import { Mail, Lock, ArrowRight, Loader2, Github, Globe } from 'lucide-react';
+                                             ^
+4: import { Card, Button, Input } from '../Components/ui';
+
+    at getRollupError (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/parseAst.js:402:41)
+    at error (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/parseAst.js:398:42)
+    at Module.error (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:17040:16)
+    at Module.traceVariable (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:17452:29)
+    at ModuleScope.findVariable (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:15070:39)
+    at FunctionScope.findVariable (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)
+    at FunctionBodyScope.findVariable (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:5673:38)
+    at Identifier.bind (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:5447:40)
+    at CallExpression.bind (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:2825:28)
+    at CallExpression.bind (file:///Users/anshumangarg/Documents/Projects/2nd%20Year/Expense_Tracker/FrontEnd/node_modules/rollup/dist/es/shared/node-entry.js:12179:15)
