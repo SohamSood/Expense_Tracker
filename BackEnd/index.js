@@ -98,7 +98,6 @@ const logoutRoutes = require("./Routes/logout_routes");
 
 app.use(cors());
 app.use(express.json());
-app.use(express.json());
 
 
 
@@ -111,10 +110,11 @@ app.use("/api/average",averageRoutes);
 app.use("/api/decrease",decreaseRoutes);
 app.use("/api/increase",increaseRoutes);
 app.use("/api/user", userRoutes);
-//login
-app.use("/expenses", expenseRoutes);
-app.use("/auth", loginRoutes);
-app.use("/auth", logoutRoutes);
+
+//login (mapped under /api so frontend utilities work)
+app.use("/api/expenses", expenseRoutes);
+app.use("/api/auth", loginRoutes);
+app.use("/api/auth", logoutRoutes);
 
 //direct endpoints
 app.get("/", (req, res) => {

@@ -3,19 +3,31 @@ import { useNavigate } from 'react-router-dom';
 import { Mail, Lock, ArrowRight, Loader2, Code, Globe } from 'lucide-react';
 import { Card, Button, Input } from '../Components/ui';
 import LoginIllustration from '../Components/LoginIllustration';
+import { api } from '../utils/api';
 
 export default function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleLogin = (e) => {
+  const [errorMsg, setErrorMsg] = useState('');
+
+  const handleLogin = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // Simulate login
-    setTimeout(() => {
+    setErrorMsg('');
+    try {
+      const email = e.target[0].value;
+      const password = e.target[1].value;
+      
+      const res = await api.post('/auth/login', { email, password });
+      if (res.message === "Login successfully") {
+        navigate('/dashboard');
+      }
+    } catch (err) {
+      setErrorMsg('Invalid email or password');
+    } finally {
       setLoading(false);
-      navigate('/dashboard');
-    }, 1500);
+    }
   };
 
   return (
@@ -30,6 +42,7 @@ export default function Login() {
           <div className="login-content">
             <h1>Welcome back</h1>
             <p className="login-subtitle">Enter your credentials to access your account</p>
+            {errorMsg && <p style={{ color: 'red', marginTop: '0', fontSize: '0.9rem' }}>{errorMsg}</p>}
 
             <form className="login-form" onSubmit={handleLogin}>
               <Input
