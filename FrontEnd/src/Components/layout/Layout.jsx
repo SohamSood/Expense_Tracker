@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Sidebar } from './Sidebar';
 import { Topbar } from './Topbar';
-import { motion, AnimatePresence } from 'framer-motion';
+import { useAuth } from '../../context/AuthContext';
 
 export const Layout = ({ children }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(window.innerWidth >= 1024);
-  const [user, setUser] = useState({ name: 'User' });
+  const { user } = useAuth();
 
   useEffect(() => {
     const handleResize = () => {
@@ -18,12 +18,6 @@ export const Layout = ({ children }) => {
 
     window.addEventListener('resize', handleResize);
     
-    // Fetch user info
-    fetch('http://localhost:5001/api/user')
-      .then(res => res.json())
-      .then(data => setUser(data))
-      .catch(err => console.error('Error fetching user:', err));
-
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
@@ -41,18 +35,9 @@ export const Layout = ({ children }) => {
         />
         
         <main className="main-content">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={window.location.pathname}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.2 }}
-              className="page-container"
-            >
-              {children}
-            </motion.div>
-          </AnimatePresence>
+          <div className="page-container">
+            {children}
+          </div>
         </main>
       </div>
     </div>

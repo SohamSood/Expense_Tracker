@@ -22,7 +22,7 @@ export const useBills = () => {
 
   const addBill = async (billData) => {
     try {
-      const data = await api.post('/bills', billData);
+      const data = await api.post('/bills/add', billData);
       setBills((prev) => [data, ...prev]);
       return data;
     } catch (err) {

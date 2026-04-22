@@ -3,19 +3,26 @@ import {
   Search, 
   Bell, 
   Menu, 
-  Moon, 
-  Sun,
   ChevronDown,
   User,
-  Settings,
+  Settings as SettingsIcon,
   LogOut
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 import { cn } from '../ui';
 
 export const Topbar = ({ onMenuClick, user = { name: 'User' } }) => {
   const { theme, toggleTheme } = useTheme();
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [showProfile, setShowProfile] = React.useState(false);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   return (
     <header className="topbar">
@@ -23,22 +30,9 @@ export const Topbar = ({ onMenuClick, user = { name: 'User' } }) => {
         <button className="menu-btn" onClick={onMenuClick}>
           <Menu size={24} />
         </button>
-        <div className="search-bar">
-          <Search size={18} className="search-icon" />
-          <input type="text" placeholder="Search transactions, bills..." />
-        </div>
       </div>
 
       <div className="topbar-right">
-        <button className="icon-btn" onClick={toggleTheme} title="Toggle Theme">
-          {theme === 'light' ? <Moon size={20} /> : <Sun size={20} />}
-        </button>
-        
-        <button className="icon-btn">
-          <Bell size={20} />
-          <span className="notification-dot" />
-        </button>
-
         <div className="profile-container">
           <button 
             className="profile-btn" 
@@ -56,14 +50,11 @@ export const Topbar = ({ onMenuClick, user = { name: 'User' } }) => {
 
           {showProfile && (
             <div className="profile-dropdown glass">
-              <button className="dropdown-item">
-                <User size={16} /> <span>Profile</span>
-              </button>
-              <button className="dropdown-item">
-                <Settings size={16} /> <span>Settings</span>
+              <button className="dropdown-item" onClick={() => { navigate('/settings'); setShowProfile(false); }}>
+                <SettingsIcon size={16} /> <span>Settings</span>
               </button>
               <div className="dropdown-divider" />
-              <button className="dropdown-item dropdown-item--danger">
+              <button className="dropdown-item dropdown-item--danger" onClick={handleLogout}>
                 <LogOut size={16} /> <span>Logout</span>
               </button>
             </div>

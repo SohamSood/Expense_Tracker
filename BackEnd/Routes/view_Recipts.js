@@ -1,11 +1,13 @@
 const express = require("express");
 const fs = require("fs/promises");
 const path = require("path");
+const Bill = require("../Models/Bill");
+const authMiddleware = require("../Middleware/authMiddleware");
 
 const router = express.Router();
+router.use(authMiddleware);
 
 const UPLOADS_DIR = path.join(__dirname, "../Uploads");
-const DB_PATH = path.join(__dirname, "../Data/sample.json");
 
 router.get("/", async (req, res) => {
   try {
@@ -74,40 +76,34 @@ router.post("/save/:filename", async (req, res) => {
       parsed[key] = value;
     });
 
-    const dbRaw = await fs.readFile(DB_PATH, "utf8");
-    const db = JSON.parse(dbRaw);
-
-    const newBill = {
-      id: db.bills.length + 1,
+    const newBillData = {
+      user: req.userId,
       type: parsed["Bill Type"] || "Other",
-      date: parsed["Date"],
-      time: parsed["Time"],
-      amount: Number(parsed["Bill Amount"]),
+      date: parsed["Date"] || new Date().toISOString().split('T')[0],
+      time: parsed["Time"] || new Date().toLocaleTimeString('en-US', { hour12: false }),
+      amount: Number(parsed["Bill Amount"]) || 0,
       status: parsed["Status"] || "paid",
       items: [
         {
           name: parsed["Bill Type"] || "Other",
-          price: Number(parsed["Bill Amount"])
+          price: Number(parsed["Bill Amount"]) || 0
         }
       ]
     };
 
-    const exists = db.bills.some(b =>
-      b.date === newBill.date &&
-      b.time === newBill.time &&
-      b.amount === newBill.amount &&
-      b.type === newBill.type
-    );
+    const exists = await Bill.findOne({
+      user: req.userId,
+      date: newBillData.date,
+      amount: newBillData.amount,
+      type: newBillData.type
+    });
 
     if (exists) {
-      return res.json({
-        message: "Duplicate bill skipped"
-      });
+      return res.json({ message: "Duplicate bill skipped" });
     }
 
-    db.bills.push(newBill);
-
-    await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2));
+    const newBill = new Bill(newBillData);
+    await newBill.save();
 
     res.json({
       message: "Bill saved",
@@ -130,47 +126,42 @@ router.post("/save-all", async (req, res) => {
     const files = await fs.readdir(UPLOADS_DIR);
     const txtFiles = files.filter(f => /\.txt$/i.test(f));
 
-    const dbRaw = await fs.readFile(DB_PATH, "utf8");
-    const db = JSON.parse(dbRaw);
-
     let saved = 0;
     let skipped = 0;
 
     for (const file of txtFiles) {
-
       const filePath = path.join(UPLOADS_DIR, file);
       const content = await fs.readFile(filePath, "utf8");
 
       const parsed = {};
-
       content.split("\n").forEach((line) => {
-
         const i = line.indexOf(":");
         if (i === -1) return;
-
         const key = line.slice(0, i).trim();
         const value = line.slice(i + 1).trim();
-
         parsed[key] = value;
-
       });
 
       const amount = Number(parsed["Bill Amount"]) || 0;
       const type = parsed["Bill Type"] || "Other";
+      const date = parsed["Date"] || new Date().toISOString().slice(0,10);
 
-      const exists = db.bills.some(
-        b => b.amount === amount && b.type === type
-      );
+      const exists = await Bill.findOne({
+        user: req.userId,
+        amount: amount,
+        type: type,
+        date: date
+      });
 
       if (exists) {
         skipped++;
         continue;
       }
 
-      const newBill = {
-        id: db.bills.length + 1,
+      const newBill = new Bill({
+        user: req.userId,
         type,
-        date: parsed["Date"] || new Date().toISOString().slice(0,10),
+        date,
         time: parsed["Time"] || new Date().toTimeString().slice(0,5),
         amount,
         status: parsed["Status"] || "paid",
@@ -180,13 +171,11 @@ router.post("/save-all", async (req, res) => {
             price: amount
           }
         ]
-      };
+      });
 
-      db.bills.push(newBill);
+      await newBill.save();
       saved++;
     }
-
-    await fs.writeFile(DB_PATH, JSON.stringify(db, null, 2));
 
     res.json({
       message: "processing finished",

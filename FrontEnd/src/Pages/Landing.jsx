@@ -10,6 +10,7 @@ import {
   Smartphone
 } from 'lucide-react';
 import { Button, Card, Badge, cn } from '../Components/ui';
+import heroImage from '../assets/hero_illustration.png';
 
 export default function Landing() {
   const navigate = useNavigate();
@@ -36,7 +37,6 @@ export default function Landing() {
             <Button size="lg" onClick={() => navigate('/login')}>
               Start for free <ArrowRight size={20} />
             </Button>
-            <Button size="lg" variant="outline">View Demo</Button>
           </div>
           <div className="hero-stats">
             <div className="stat"><strong>10k+</strong><span>Users</span></div>
@@ -46,22 +46,16 @@ export default function Landing() {
         </div>
         <div className="hero-visual">
           <div className="mockup-container">
-            <div className="mockup-dashboard glass">
-              <div className="mockup-header" />
-              <div className="mockup-grid">
-                <div className="mockup-card" />
-                <div className="mockup-card" />
-                <div className="mockup-chart" />
-              </div>
-            </div>
-            <div className="mockup-floating card-1 glass">
-              <PieChart size={24} color="#6366f1" />
-              <span>Smart Analysis</span>
-            </div>
-            <div className="mockup-floating card-2 glass">
-              <Zap size={24} color="#10b981" />
-              <span>Real-time</span>
-            </div>
+            <img 
+              src={heroImage} 
+              alt="Smart Financial Management Dashboard" 
+              style={{ 
+                width: '100%', 
+                maxWidth: '600px', 
+                borderRadius: '24px', 
+                boxShadow: 'var(--shadow-lg)' 
+              }} 
+            />
           </div>
         </div>
       </section>
@@ -106,37 +100,18 @@ export default function Landing() {
       </section>
 
       <footer className="landing-footer">
-        <div className="footer-content">
-          <div className="footer-brand">
-            <div className="logo">
-              <div className="logo-icon" />
-              <span>ExpenseTracker</span>
-            </div>
-            <p>Making financial management accessible for everyone.</p>
-          </div>
-          <div className="footer-grid">
-            <div className="footer-col">
-              <h4>Product</h4>
-              <a href="#">Features</a>
-              <a href="#">Pricing</a>
-              <a href="#">Security</a>
-            </div>
-            <div className="footer-col">
-              <h4>Company</h4>
-              <a href="#">About</a>
-              <a href="#">Blog</a>
-              <a href="#">Careers</a>
-            </div>
-            <div className="footer-col">
-              <h4>Legal</h4>
-              <a href="#">Privacy</a>
-              <a href="#">Terms</a>
-              <a href="#">Cookies</a>
-            </div>
-          </div>
+        <div className="footer-cta">
+          <h2>Ready to take control of your finances?</h2>
+          <Button size="lg" onClick={() => navigate('/login')} className="mt-4">
+            Join ExpenseTracker Today <ArrowRight size={20} />
+          </Button>
         </div>
         <div className="footer-bottom">
-          <p>&copy; 2026 ExpenseTracker Inc. All rights reserved.</p>
+          <div className="logo" style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', fontWeight: 'bold', color: 'var(--text-primary)' }}>
+            <div className="logo-icon" />
+            <span>ExpenseTracker</span>
+          </div>
+          <p>&copy; {new Date().getFullYear()} ExpenseTracker Inc. All rights reserved.</p>
         </div>
       </footer>
     </div>

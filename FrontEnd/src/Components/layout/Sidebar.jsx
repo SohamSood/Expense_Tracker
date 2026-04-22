@@ -4,13 +4,13 @@ import {
   LayoutDashboard, 
   PlusCircle, 
   Receipt, 
-  CreditCard, 
-  Settings, 
-  HelpCircle,
   LogOut,
-  X
+  X,
+  Coins,
+  PiggyBank
 } from 'lucide-react';
 import { useTheme } from '../../context/ThemeContext';
+import { useAuth } from '../../context/AuthContext';
 import { cn } from '../ui';
 
 const sideItems = [
@@ -18,14 +18,20 @@ const sideItems = [
   { label: 'Add Bill', icon: PlusCircle, path: '/add-bill' },
   { label: 'View Bills', icon: Receipt, path: '/view-bills' },
   { label: 'Upload Receipt', icon: Receipt, path: '/upload-receipt' },
-  { label: 'Cards', icon: CreditCard, path: '#' },
-  { label: 'Settings', icon: Settings, path: '#' },
+  { label: 'Digital Gold', icon: Coins, path: '/gold' },
+  { label: 'FD Calculator', icon: PiggyBank, path: '/fd' },
 ];
 
 export const Sidebar = ({ isOpen, onClose }) => {
   const navigate = useNavigate();
   const location = useLocation();
   const { theme } = useTheme();
+  const { logout } = useAuth();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   return (
     <>
@@ -73,11 +79,7 @@ export const Sidebar = ({ isOpen, onClose }) => {
           </div>
 
           <div className="nav-section nav-section--bottom">
-            <button className="nav-item">
-              <HelpCircle size={20} className="nav-icon" />
-              <span>Support</span>
-            </button>
-            <button className="nav-item nav-item--logout">
+            <button className="nav-item nav-item--logout" onClick={handleLogout}>
               <LogOut size={20} className="nav-icon" />
               <span>Logout</span>
             </button>
