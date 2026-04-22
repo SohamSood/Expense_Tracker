@@ -5,7 +5,8 @@ import {
   Wallet, 
   Clock, 
   ArrowUpRight,
-  MoreVertical
+  MoreVertical,
+  Receipt
 } from 'lucide-react';
 import { Card, Button, Badge, cn } from '../Components/ui';
 import { api } from '../utils/api';
@@ -121,7 +122,7 @@ export default function Dashboard() {
             <div className="empty-state">No recent activities found.</div>
           ) : (
             recentBills.map((bill) => (
-              <div key={bill.id} className="activity-item">
+              <div key={bill._id || bill.id} className="activity-item">
                 <div className="activity-info">
                   <div className="activity-icon-container">
                     <Receipt size={18} />

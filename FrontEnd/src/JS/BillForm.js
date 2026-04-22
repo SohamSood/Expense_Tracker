@@ -1,15 +1,10 @@
-export const addBill = async (billData) => {
-  const response = await fetch("http://localhost:5001/api/bills", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(billData),
-  });
+import { api } from "../utils/api";
 
-  if (!response.ok) {
+export const addBill = async (billData) => {
+  try {
+    const data = await api.post("/bills/add", billData);
+    return data;
+  } catch (error) {
     throw new Error("Failed to save bill");
   }
-
-  return response.json();
 };
