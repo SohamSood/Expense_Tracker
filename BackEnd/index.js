@@ -83,12 +83,24 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const http = require("http");
 const { Server } = require("socket.io");
+const cron = require("node-cron");
 const PORT = 5001;
 
 const connectDB = require("./config/db");
+const User = require("./Models/User");
 
 // MongoDB Connection
 connectDB();
+
+// Cron: permanently delete accounts soft-deleted more than 30 days ago
+// Runs every day at midnight
+cron.schedule("0 0 * * *", async () => {
+  const cutoff = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
+  const result = await User.deleteMany({ isDeleted: true, deletedAt: { $lte: cutoff } });
+  if (result.deletedCount > 0) {
+    console.log(`[Cron] Permanently deleted ${result.deletedCount} expired account(s)`);
+  }
+});
 
 // HTTP & Socket.IO Server Setup
 const server = http.createServer(app);
@@ -105,7 +117,7 @@ const authRoutes = require("./Routes/auth_routes_new");
 const goldRoutes = require("./Routes/gold_routes");
 const fdRoutes = require("./Routes/fd_routes");
 const billRoutes = require("./Routes/billRoutes");
-const receiptRoutes = require("./Routes/view_Recipts");
+const receiptRoutes = require("./Routes/receiptRoutes");
 
 app.use(cors({
   origin: "http://localhost:5173",
@@ -121,6 +133,7 @@ app.use("/api/gold", goldRoutes);
 app.use("/api/fd", fdRoutes);
 app.use("/api/bills", billRoutes);
 app.use("/api/receipts", receiptRoutes);
+app.use("/api/dashboard", require("./Routes/dashboardRoutes"));
 
 //direct endpoints
 app.get("/", (req, res) => {
@@ -130,6 +143,11 @@ app.get("/", (req, res) => {
 // Socket.io namespace for Gold live price
 const goldNamespace = io.of("/gold");
 let currentGoldPrice = 6000;
+
+goldNamespace.on("connection", (socket) => {
+  // Send current price immediately on connection
+  socket.emit("priceUpdate", { price: currentGoldPrice, timestamp: new Date() });
+});
 
 setInterval(() => {
   // fluctuate price slightly between -5 and +5

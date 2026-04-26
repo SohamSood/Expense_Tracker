@@ -81,10 +81,10 @@ export default function AddBill() {
                 <li>Choose a relevant category for better insights.</li>
                 <li>You can also upload a receipt to auto-fill details.</li>
               </ul>
-              <Button 
-                variant="secondary" 
+              <Button
+                variant="secondary"
                 className="w-full mt-4"
-                onClick={() => navigate('/upload_Recipt')}
+                onClick={() => navigate('/upload-receipt')}
               >
                 Upload Receipt instead
               </Button>

@@ -12,9 +12,9 @@ const generateTokenAndSetCookie = (res, userId) => {
 
   res.cookie("jwt", token, {
     httpOnly: true,
-    secure: process.env.NODE_ENV !== "development", // Use secure cookies in production
-    sameSite: "strict",
-    maxAge: 1 * 24 * 60 * 60 * 1000, // 1 day
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
   });
 };
 
@@ -57,20 +57,25 @@ exports.login = async (req, res) => {
 
     const user = await User.findOne({ email });
 
-    if (user && (await bcrypt.compare(password, user.password))) {
-      generateTokenAndSetCookie(res, user._id);
-      res.status(200).json({
-        _id: user._id,
-        name: user.name,
-        email: user.email,
-      });
-    } else {
-      res.status(401).json({ message: "Invalid email or password" });
+    if (!user || !(await bcrypt.compare(password, user.password))) {
+      return res.status(401).json({ message: "Invalid email or password" });
     }
+
+    if (user.isDeleted) {
+      return res.status(403).json({ message: "This account has been deleted" });
+    }
+
+    generateTokenAndSetCookie(res, user._id);
+    res.status(200).json({
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+    });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
 };
+
 
 exports.logout = (req, res) => {
   res.cookie("jwt", "", {
@@ -83,11 +88,10 @@ exports.logout = (req, res) => {
 exports.getUserProfile = async (req, res) => {
   try {
     const user = await User.findById(req.userId).select("-password");
-    if (user) {
-      res.json(user);
-    } else {
-      res.status(404).json({ message: "User not found" });
+    if (!user || user.isDeleted) {
+      return res.status(404).json({ message: "User not found" });
     }
+    res.json(user);
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -124,16 +128,19 @@ exports.updateUserProfile = async (req, res) => {
 exports.changePassword = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
-    const { oldPassword, newPassword } = req.body;
+    if (!user) return res.status(404).json({ message: "User not found" });
 
-    if (user && (await bcrypt.compare(oldPassword, user.password))) {
-      const salt = await bcrypt.genSalt(10);
-      user.password = await bcrypt.hash(newPassword, salt);
-      await user.save();
-      res.json({ message: "Password updated successfully" });
-    } else {
-      res.status(401).json({ message: "Invalid old password" });
+    const { oldPassword, newPassword } = req.body;
+    if (!newPassword || newPassword.length < 6) {
+      return res.status(400).json({ message: "New password must be at least 6 characters" });
     }
+
+    const isMatch = await bcrypt.compare(oldPassword, user.password);
+    if (!isMatch) return res.status(401).json({ message: "Old password is incorrect" });
+
+    user.password = await bcrypt.hash(newPassword, 10);
+    await user.save();
+    res.json({ message: "Password updated successfully" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }
@@ -142,16 +149,15 @@ exports.changePassword = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findById(req.userId);
-    if (user) {
-      await User.deleteOne({ _id: user._id });
-      res.cookie("jwt", "", {
-        httpOnly: true,
-        expires: new Date(0),
-      });
-      res.json({ message: "User removed" });
-    } else {
-      res.status(404).json({ message: "User not found" });
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
     }
+    // Soft delete — permanent cleanup handled by cron job after 30 days
+    user.isDeleted = true;
+    user.deletedAt = new Date();
+    await user.save();
+    res.cookie("jwt", "", { httpOnly: true, expires: new Date(0) });
+    res.json({ message: "Account deleted" });
   } catch (error) {
     res.status(500).json({ message: "Server error", error: error.message });
   }

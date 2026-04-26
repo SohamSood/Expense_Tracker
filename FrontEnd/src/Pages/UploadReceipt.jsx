@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
   FileText, 
   Image as ImageIcon, 
@@ -8,7 +8,8 @@ import {
   Save, 
   X,
   FileSearch,
-  ChevronRight
+  ChevronRight,
+  Plus
 } from 'lucide-react';
 import { Card, Button, Badge, cn } from '../Components/ui';
 import { api } from '../utils/api';
@@ -33,7 +34,7 @@ function FileItem({ file, isActive, onClick }) {
         <Icon size={18} />
       </div>
       <div className="file-info">
-        <span className="file-name">{file}</span>
+        <span className="file-name text-left truncate">{file}</span>
         <span className="file-ext">{ext.toUpperCase()}</span>
       </div>
       {isActive && <ChevronRight size={16} className="active-arrow" />}
@@ -48,6 +49,9 @@ export default function UploadReceipt() {
   const [selectedMedia, setSelectedMedia] = useState(null);
   const [textData, setTextData] = useState(null);
   const [isSaving, setIsSaving] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+  
+  const fileInputRef = useRef(null);
 
   useEffect(() => {
     fetchFiles();
@@ -75,6 +79,29 @@ export default function UploadReceipt() {
       .then(data => setTextData(data))
       .catch(err => console.error(err));
   }, [selectedText]);
+
+  const handleFileUpload = async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+
+    const formData = new FormData();
+    formData.append('file', file);
+
+    try {
+      setIsUploading(true);
+      // Use the raw axios instance from our unified API for FormData
+      await api.instance.post('/receipts/upload', formData, {
+        headers: { 'Content-Type': 'multipart/form-data' }
+      });
+      await fetchFiles(); // Refresh list
+    } catch (err) {
+      console.error('Upload error:', err);
+      alert(err.response?.data?.error || 'Failed to upload file');
+    } finally {
+      setIsUploading(false);
+      if (fileInputRef.current) fileInputRef.current.value = '';
+    }
+  };
 
   const textFiles = files.filter(f => /\.txt$/i.test(f));
   const mediaFiles = files.filter(f => /\.(png|jpg|jpeg|pdf)$/i.test(f));
@@ -111,7 +138,7 @@ export default function UploadReceipt() {
     }
   };
 
-  if (loading) {
+  if (loading && files.length === 0) {
     return (
       <div className="loading-state">
         <div className="spinner" />
@@ -121,36 +148,50 @@ export default function UploadReceipt() {
   }
 
   return (
-    <div className="receipts-container">
-      <div className="page-header-row">
+    <div className="receipts-container p-4 md:p-8">
+      <div className="page-header-row flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
         <div>
-          <h1 className="page-title">Receipts & Documents</h1>
-          <p className="page-subtitle">Process uploaded receipts and convert them to bill entries</p>
+          <h1 className="page-title text-3xl font-bold">Receipts & Documents</h1>
+          <p className="page-subtitle text-[var(--text-secondary)]">Upload and process receipts into bill entries</p>
         </div>
-        <div className="header-actions">
+        <div className="header-actions flex gap-3">
+          <input 
+            type="file" 
+            ref={fileInputRef} 
+            onChange={handleFileUpload} 
+            style={{ display: 'none' }}
+            accept=".pdf,.png,.jpg,.jpeg,.txt"
+          />
+          <Button 
+            variant="outline" 
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isUploading}
+          >
+            {isUploading ? <><Upload className="animate-spin mr-2" size={18} /> Uploading...</> : <><Plus size={18} /> Upload New</>}
+          </Button>
           <Button 
             variant="primary" 
             onClick={saveAllBills} 
             disabled={isSaving || files.length === 0}
           >
-            {isSaving ? 'Processing...' : <><Save size={18} /> Save All Records</>}
+            {isSaving ? 'Processing...' : <><Save size={18} /> Process All</>}
           </Button>
         </div>
       </div>
 
-      <div className="receipts-grid">
+      <div className="receipts-grid grid grid-cols-1 lg:grid-cols-2 gap-8">
         {/* Left Column: Text Records */}
-        <section className="receipt-col">
-          <div className="col-header">
-            <div className="icon-badge txt"><FileText size={16} /></div>
-            <h3>Text Data</h3>
+        <section className="receipt-col flex flex-col gap-6">
+          <div className="col-header flex items-center gap-3">
+            <div className="icon-badge txt bg-blue-100 text-blue-600 p-2 rounded-lg"><FileText size={18} /></div>
+            <h3 className="text-xl font-semibold">Extracted Data (.txt)</h3>
             <Badge variant="primary">{textFiles.length}</Badge>
           </div>
           
-          <Card className="file-list-card">
-            <div className="file-list">
+          <Card className="file-list-card overflow-hidden">
+            <div className="file-list max-h-[300px] overflow-y-auto">
               {textFiles.length === 0 ? (
-                <div className="empty-files">No text records.</div>
+                <div className="empty-files p-8 text-center text-gray-500">No text records found.</div>
               ) : (
                 textFiles.map(f => (
                   <FileItem 
@@ -164,45 +205,45 @@ export default function UploadReceipt() {
             </div>
           </Card>
 
-          <Card className="viewer-card">
+          <Card className="viewer-card min-h-[300px] flex flex-col">
             {textData ? (
-              <div className="text-viewer">
-                <div className="viewer-header">
-                  <h4>Extracted Information</h4>
+              <div className="text-viewer p-6 flex flex-col h-full">
+                <div className="viewer-header flex justify-between items-center mb-6">
+                  <h4 className="font-bold text-lg">Record Preview</h4>
                   <Button size="sm" onClick={saveBill} disabled={isSaving}>
-                    <Check size={14} /> Save as Bill
+                    <Check size={14} className="mr-2" /> Save as Bill
                   </Button>
                 </div>
-                <div className="data-grid">
+                <div className="data-grid flex-1 border rounded-lg p-4 bg-gray-50">
                   {Object.entries(textData).map(([k, v]) => (
-                    <div key={k} className="data-row">
-                      <span className="data-label">{k}</span>
-                      <span className="data-value">{v || 'N/A'}</span>
+                    <div key={k} className="data-row flex justify-between py-2 border-bottom last:border-0">
+                      <span className="data-label text-gray-500 font-medium">{k}</span>
+                      <span className="data-value font-semibold">{v || 'N/A'}</span>
                     </div>
                   ))}
                 </div>
               </div>
             ) : (
-              <div className="viewer-placeholder">
-                <FileSearch size={40} />
-                <p>Select a record to preview data</p>
+              <div className="viewer-placeholder flex-1 flex flex-col items-center justify-center p-12 text-gray-400">
+                <FileSearch size={48} className="mb-4" />
+                <p>Select a text record to see extracted data</p>
               </div>
             )}
           </Card>
         </section>
 
         {/* Right Column: Media Files */}
-        <section className="receipt-col">
-          <div className="col-header">
-            <div className="icon-badge media"><ImageIcon size={16} /></div>
-            <h3>PDFs & Images</h3>
+        <section className="receipt-col flex flex-col gap-6">
+          <div className="col-header flex items-center gap-3">
+            <div className="icon-badge media bg-purple-100 text-purple-600 p-2 rounded-lg"><ImageIcon size={18} /></div>
+            <h3 className="text-xl font-semibold">Images & PDFs</h3>
             <Badge variant="primary">{mediaFiles.length}</Badge>
           </div>
 
-          <Card className="file-list-card">
-            <div className="file-list">
+          <Card className="file-list-card overflow-hidden">
+            <div className="file-list max-h-[300px] overflow-y-auto">
               {mediaFiles.length === 0 ? (
-                <div className="empty-files">No media files.</div>
+                <div className="empty-files p-8 text-center text-gray-500">No media files found.</div>
               ) : (
                 mediaFiles.map(f => (
                   <FileItem 
@@ -216,22 +257,24 @@ export default function UploadReceipt() {
             </div>
           </Card>
 
-          <Card className={cn('viewer-card media-viewer', !selectedMedia && 'is-empty')}>
+          <Card className={cn('viewer-card media-viewer min-h-[400px] overflow-hidden flex flex-col', !selectedMedia && 'justify-center items-center')}>
             {selectedMedia ? (
-              <div className="media-container">
+              <div className="media-container relative h-full flex-1">
                 {isPDF ? (
-                  <iframe src={mediaUrl} title={selectedMedia} className="pdf-frame" />
+                  <iframe src={mediaUrl} title={selectedMedia} className="pdf-frame w-full h-[500px]" />
                 ) : (
-                  <img src={mediaUrl} alt={selectedMedia} className="receipt-img" />
+                  <div className="flex items-center justify-center h-full p-4">
+                    <img src={mediaUrl} alt={selectedMedia} className="receipt-img max-w-full max-h-[500px] object-contain rounded-lg shadow-lg" />
+                  </div>
                 )}
-                <div className="media-overlay">
-                  <Badge variant="secondary">{selectedMedia}</Badge>
+                <div className="media-overlay absolute bottom-4 left-4">
+                  <Badge variant="secondary" className="bg-white/90 backdrop-blur shadow-sm">{selectedMedia}</Badge>
                 </div>
               </div>
             ) : (
-              <div className="viewer-placeholder">
-                <Upload size={40} />
-                <p>Select a file to view document</p>
+              <div className="viewer-placeholder p-12 text-center text-gray-400">
+                <Upload size={48} className="mx-auto mb-4" />
+                <p>Select a file to view document preview</p>
               </div>
             )}
           </Card>

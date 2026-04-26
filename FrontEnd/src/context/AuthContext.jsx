@@ -1,11 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import axios from "axios";
-
-// Create Axios instance with default configs
-export const api = axios.create({
-  baseURL: "http://localhost:5001",
-  withCredentials: true,
-});
+import { api } from "../utils/api";
 
 const AuthContext = createContext();
 
@@ -16,25 +10,17 @@ export const AuthProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check if user is logged in
-    const checkAuth = async () => {
-      try {
-        const response = await api.get("/api/auth/profile");
-        setUser(response.data);
-      } catch (error) {
-        setUser(null);
-      } finally {
-        setLoading(false);
-      }
-    };
-    checkAuth();
+    api.get("/auth/profile")
+      .then(data => setUser(data))
+      .catch(() => setUser(null))
+      .finally(() => setLoading(false));
   }, []);
 
   const login = async (email, password) => {
     try {
-      const response = await api.post("/api/auth/login", { email, password });
-      setUser(response.data);
-      return response.data;
+      const data = await api.post("/auth/login", { email, password });
+      setUser(data);
+      return data;
     } catch (error) {
       throw error.response?.data?.message || "Login failed";
     }
@@ -42,9 +28,9 @@ export const AuthProvider = ({ children }) => {
 
   const register = async (name, email, password) => {
     try {
-      const response = await api.post("/api/auth/register", { name, email, password });
-      setUser(response.data);
-      return response.data;
+      const data = await api.post("/auth/register", { name, email, password });
+      setUser(data);
+      return data;
     } catch (error) {
       throw error.response?.data?.message || "Registration failed";
     }
@@ -52,20 +38,28 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.post("/api/auth/logout");
-      setUser(null);
-    } catch (error) {
-      console.error("Logout error", error);
-    }
+      await api.post("/auth/logout");
+    } catch (_) {}
+    setUser(null);
+  };
+
+  // Update local user state after profile edits
+  const updateUser = (updatedFields) => {
+    setUser(prev => ({ ...prev, ...updatedFields }));
   };
 
   if (loading) {
-    return <div>Loading...</div>; // Could be a nicer spinner
+    return (
+      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100vh' }}>
+        <div className="spinner" />
+      </div>
+    );
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, register, logout }}>
+    <AuthContext.Provider value={{ user, login, register, logout, updateUser }}>
       {children}
     </AuthContext.Provider>
   );
 };
+

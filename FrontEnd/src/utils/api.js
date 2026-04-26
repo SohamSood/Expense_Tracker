@@ -1,31 +1,17 @@
-const API_BASE_URL = 'http://localhost:5001/api';
+import axios from 'axios';
 
+const instance = axios.create({
+  baseURL: 'http://localhost:5001/api',
+  withCredentials: true,
+});
+
+// Unified api object — use this everywhere in the app
 export const api = {
-  get: async (endpoint) => {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      credentials: 'include'
-    });
-    if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
-    return res.json();
-  },
-  
-  post: async (endpoint, data) => {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(data),
-    });
-    if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
-    return res.json();
-  },
-
-  delete: async (endpoint) => {
-    const res = await fetch(`${API_BASE_URL}${endpoint}`, {
-      method: 'DELETE',
-      credentials: 'include'
-    });
-    if (!res.ok) throw new Error(`API Error: ${res.statusText}`);
-    return res.json();
-  }
+  get: (endpoint) => instance.get(endpoint).then(r => r.data),
+  post: (endpoint, data) => instance.post(endpoint, data).then(r => r.data),
+  put: (endpoint, data) => instance.put(endpoint, data).then(r => r.data),
+  delete: (endpoint) => instance.delete(endpoint).then(r => r.data),
+  // Expose raw axios instance for special cases (e.g. FormData uploads)
+  instance,
 };
+
