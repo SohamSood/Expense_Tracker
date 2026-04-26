@@ -76,6 +76,7 @@
 
 
 
+require("dotenv").config();
 const express = require("express");
 const app = express();
 const path = require("path");
@@ -84,7 +85,7 @@ const cookieParser = require("cookie-parser");
 const http = require("http");
 const { Server } = require("socket.io");
 const cron = require("node-cron");
-const PORT = 5001;
+const PORT = process.env.PORT || 5001;
 
 const connectDB = require("./config/db");
 const User = require("./Models/User");
@@ -134,6 +135,21 @@ app.use("/api/fd", fdRoutes);
 app.use("/api/bills", billRoutes);
 app.use("/api/receipts", receiptRoutes);
 app.use("/api/dashboard", require("./Routes/dashboardRoutes"));
+
+// EJS Configuration
+app.set("view engine", "ejs");
+app.set("views", path.join(__dirname, "views"));
+
+// Admin EJS Route Demo
+app.get("/admin/stats", async (req, res) => {
+  try {
+    const userCount = await User.countDocuments();
+    const billCount = await require("./Models/Bill").countDocuments();
+    res.render("admin", { userCount, billCount });
+  } catch (err) {
+    res.status(500).send("Error rendering admin page");
+  }
+});
 
 //direct endpoints
 app.get("/", (req, res) => {
